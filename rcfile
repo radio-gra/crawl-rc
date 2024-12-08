@@ -1,9 +1,9 @@
 #todo: custom variable configs, extending the presets e.g. "cfg_RT_MiFi01"
 #todo: smart highlighting, depending on XL and species
 #todo: preset-dependent force_more
-#todo: recolor, reglyph mons
 #todo: find a way to exclude portals from > rotation
 #todo: preset-dependent glyphs
+#todo: convenient ring switching
 #https://doc.dcss.io
 #
 #  c_answer_prompt
@@ -11,10 +11,10 @@
 #
 
 : gVersion = "0.32"
-: gRcRevision = "1"
-#: gPreset = "Normal"
+: gRcRevision = "2"
+: gPreset = "Normal"
 #: gPreset = "Streak"
-: gPreset = "RealTime"
+#: gPreset = "RealTime"
 #: gPreset = "TurnCount"
 : gInitCompleted = false
 
@@ -419,7 +419,57 @@ spell_slot ^=Shatter:a
 ###############################################################################################
 ####################################### Glyphs & colors #######################################
 ###############################################################################################
-feature += Zot trap {x044B, red, red, red}
+feature   += Zot trap                   { x2040, red, red, red}
+mon_glyph += warg                       : x045B
+mon_glyph += aizul                      : x015C
+mon_glyph += satyr                      : x010B
+mon_glyph += ilsuiw                     : x0271
+mon_glyph += barachi                    : x0424
+mon_glyph += hellion                    : brown
+mon_glyph += neqoxec                    : x2125
+mon_glyph += anaconda                   : red
+mon_glyph += arcanist                   : a
+mon_glyph += jeremiah                   : x0424
+mon_glyph += nagaraja                   : x0147
+mon_glyph += scorpion                   : x015F
+mon_glyph += skyshark                   : x03DC
+mon_glyph += acid blob                  : yellow
+mon_glyph += ice devil                  : lightblue
+mon_glyph += ice fiend                  : lightblue
+mon_glyph += occultist                  : a
+mon_glyph += blink frog                 : lightmagenta
+mon_glyph += hell hound                 : x045B
+mon_glyph += marrowcuda                 : x03DC
+mon_glyph += orb spider                 : x015B
+mon_glyph += saint roka                 : x00F6
+mon_glyph += orc warlord                : x00F6
+mon_glyph += necromancer                : a
+mon_glyph += ancient lich               : yellow
+mon_glyph += orc sorcerer               : x00F6
+mon_glyph += shock serpent              : x015A
+mon_glyph += merfolk avatar             : x0271
+mon_glyph += centaur warrior            : x010B
+mon_glyph += demonic crawler            : x0161
+mon_glyph += orc high priest            : x00F6
+mon_glyph += the royal jelly            : x053A
+mon_glyph += very ugly thing            : x00FC
+mon_glyph += yaktaur captain            : x010B
+mon_glyph += emperor scorpion           : x015F
+mon_glyph += guardian serpent           : x015C
+mon_glyph += deep elf sorcerer          : x00EB
+mon_glyph += salamander tyrant          : x0147
+mon_glyph += ironbound convoker         : a
+mon_glyph += ironbound preserver        : a
+mon_glyph += deep elf annihilator       : x00EB
+mon_glyph += deep elf blademaster       : x00EB
+mon_glyph += deep elf death mage        : x00EB
+mon_glyph += deep elf demonologist      : x00EB
+mon_glyph += deep elf elementalist      : x00EB
+mon_glyph += deep elf high priest       : x00EB
+mon_glyph += ironbound frostheart       : a
+mon_glyph += merged slime creature      : x0132
+mon_glyph += deep elf master archer     : x00EB brown
+mon_glyph += alligator snapping turtle  : x0167
 ###############################################################################################
 ################################### Extended monster info #####################################
 ###############################################################################################
@@ -525,117 +575,172 @@ feature += Zot trap {x044B, red, red, red}
 
   local inf = 'inf'
   gMonsInfoDict = {
-    ["jessica"] =         {HD = 1,  XP = 37,      MR = 10,},
+    ["jessica"] =             {HD = 1,    XP = 37,      MR = 10,},
 
-    ["robin"] =           {HD = 2,  XP = 15,      MR = 10,},
-    ["terence"] =         {HD = 2,  XP = 36,      MR = 10,},
+    ["adder"] =               {HD = 2,    XP = 13,      MR = 10,},
+    ["gnoll"] =               {HD = 2,    XP = 14,      MR = 10,},
+    ["robin"] =               {HD = 2,    XP = 15,      MR = 10,},
+    ["terence"] =             {HD = 2,    XP = 36,      MR = 10,},
+    ["bombardier beetle"] =   {HD = 2,    XP = 47,      MR = 20,},
 
-    ["natasha"] =         {HD = 3,  XP = 35,      MR = 20,},
-    ["crazy yiuf"] =      {HD = 3,  XP = 40,      MR = 10,},
-    ["ijyb"] =            {HD = 3,  XP = 36,      MR = 10,},
-    ["dowan"] =           {HD = 3,  XP = 69,      MR = 20,},
-    ["menkaure"] =        {HD = 3,  XP = 171,     MR = 20,},
-    ["sigmund"] =         {HD = 3,  XP = 229,     MR = 10,},
+    ["natasha"] =             {HD = 3,    XP = 35,      MR = 20,},
+    ["orc wizard"] =          {HD = 3,    XP = 35,      MR = 20,},
+    ["iguana"] =              {HD = 3,    XP = 36,      MR = 10,},
+    ["ijyb"] =                {HD = 3,    XP = 36,      MR = 10,},
+    ["crazy yiuf"] =          {HD = 3,    XP = 40,      MR = 10,},
+    ["orc priest"] =          {HD = 3,    XP = 41,      MR = 20,},
+    ["hound"] =               {HD = 3,    XP = 42,      MR = 10,},
+    ["jelly"] =               {HD = 3,    XP = 42,      MR = 10,},
+    ["killer bee"] =          {HD = 3,    XP = 62,      MR = 10,},
+    ["dowan"] =               {HD = 3,    XP = 69,      MR = 20,},
+    ["wight"] =               {HD = 3,    XP = 73,      MR = 20,},
+    ["menkaure"] =            {HD = 3,    XP = 171,     MR = 20,},
+    ["sigmund"] =             {HD = 3,    XP = 229,     MR = 10,},
 
-    ["duvessa"] =         {HD = 4,  XP = 146,     MR = 40,},
-    ["edmund"] =          {HD = 4,  XP = 165,     MR = 20,},
-    ["grum"] =            {HD = 4,  XP = 191,     MR = 10,},
-    ["eustachio"] =       {HD = 4,  XP = 200,     MR = 20,},
+    ["ribbon worm"] =         {HD = 4,    XP = 4,       MR = 10,},
+    ["scorpion"] =            {HD = 4,    XP = 84,      MR = 20,},
+    ["centaur"] =             {HD = 4,    XP = 113,     MR = 20,},
+    ["orc warrior"] =         {HD = 4,    XP = 134,     MR = 20,},
+    ["duvessa"] =             {HD = 4,    XP = 146,     MR = 40,},
+    ["edmund"] =              {HD = 4,    XP = 165,     MR = 20,},
+    ["steam dragon"] =        {HD = 4,    XP = 185,     MR = 20,},
+    ["grum"] =                {HD = 4,    XP = 191,     MR = 10,},
+    ["eustachio"] =           {HD = 4,    XP = 200,     MR = 20,},
 
-    ["ogre"] =            {HD = 5,  XP = 120,     MR = 20,},
-    ["pargi"] =           {HD = 5,  XP = 135,     MR = 10,},
-    ["blorkula"] =        {HD = 5,  XP = 226,     MR = 20,},
-    ["psyche"] =          {HD = 5,  XP = 343,     MR = 60,},
-    ["maggie"] =          {HD = 5,  XP = 399,     MR = 20,},
-    ["maurice"] =         {HD = 5,  XP = 526,     MR = 40,},
+    ["ogre"] =                {HD = 5,    XP = 120,     MR = 20,},
+    ["ice beast"] =           {HD = 5,    XP = 131,     MR = 20,},
+    ["sky beast"] =           {HD = 5,    XP = 131,     MR = 20,},
+    ["pargi"] =               {HD = 5,    XP = 135,     MR = 10,},
+    ["water moccasin"] =      {HD = 5,    XP = 150,     MR = 20,},
+    ["acid dragon"] =         {HD = 5,    XP = 156,     MR = 20,},
+    ["vampire mosquito"] =    {HD = 5,    XP = 180,     MR = 20,},
+    ["wyvern"] =              {HD = 5,    XP = 209,     MR = 20,},
+    ["blorkula"] =            {HD = 5,    XP = 226,     MR = 20,},
+    ["psyche"] =              {HD = 5,    XP = 343,     MR = 60,},
+    ["maggie"] =              {HD = 5,    XP = 399,     MR = 20,},
+    ["maurice"] =             {HD = 5,    XP = 526,     MR = 40,},
 
-    ["prince ribbit"] =   {HD = 6,  XP = 276,     MR = 40,},
-    ["grinder"] =         {HD = 6,  XP = 279,     MR = 20,},
-    ["joseph"] =          {HD = 6,  XP = 461,     MR = 40,},
-    ["pikel"] =           {HD = 6,  XP = 647,     MR = 20,},
-    ["lodul"] =           {HD = 6,  XP = 754,     MR = 40,},
-    ["sonja"] =           {HD = 6,  XP = 780,     MR = 10,},
-    ["erolcha"] =         {HD = 6,  XP = 867,     MR = 60,},
+    ["black bear"] =          {HD = 6,    XP = 129,     MR = 20,},
+    ["blink frog"] =          {HD = 6,    XP = 267,     MR = 40,},
+    ["prince ribbit"] =       {HD = 6,    XP = 276,     MR = 40,},
+    ["grinder"] =             {HD = 6,    XP = 279,     MR = 20,},
+    ["hornet"] =              {HD = 6,    XP = 284,     MR = 30,},
+    ["joseph"] =              {HD = 6,    XP = 461,     MR = 40,},
+    ["pikel"] =               {HD = 6,    XP = 647,     MR = 20,},
+    ["lodul"] =               {HD = 6,    XP = 754,     MR = 40,},
+    ["sonja"] =               {HD = 6,    XP = 780,     MR = 10,},
+    ["erolcha"] =             {HD = 6,    XP = 867,     MR = 60,},
 
-    ["jeremiah"] =        {HD = 8,  XP = 386,     MR = 40,},
-    ["snorg"] =           {HD = 8,  XP = 946,     MR = 60,},
+    ["phantom"] =             {HD = 7,    XP = 105,     MR = 40,},
+    ["yak"] =                 {HD = 7,    XP = 206,     MR = 20,},
 
-    ["urug"] =            {HD = 9,  XP = 795,     MR = 40,},
-    ["erica"] =           {HD = 9,  XP = 839,     MR = 40,},
-    ["harold"] =          {HD = 9,  XP = 875,     MR = 60,},
-    ["nessos"] =          {HD = 9,  XP = 1043,    MR = 20,},
+    ["komodo dragon"] =       {HD = 8,    XP = 364,     MR = 40,},
+    ["jeremiah"] =            {HD = 8,    XP = 386,     MR = 40,},
+    ["ice statue"] =          {HD = 8,    XP = 452,     MR = inf,},
+    ["snorg"] =               {HD = 8,    XP = 946,     MR = 60,},
 
-    ["nergalle"] =        {HD = 10,  XP = 779,    MR = 60,},
-    ["fannar"] =          {HD = 10,  XP = 882,    MR = 80,},
-    ["josephine"] =       {HD = 10,  XP = 912,    MR = 60,},
+    ["elephant"] =            {HD = 9,    XP = 486,     MR = 60,},
+    ["urug"] =                {HD = 9,    XP = 795,     MR = 40,},
+    ["erica"] =               {HD = 9,    XP = 839,     MR = 40,},
+    ["harold"] =              {HD = 9,    XP = 875,     MR = 60,},
+    ["nessos"] =              {HD = 9,    XP = 1043,    MR = 20,},
 
-    ["azrael"] =          {HD = 11,  XP = 992,    MR = 40,},
-    ["agnes"] =           {HD = 11,  XP = 1454,   MR = 100,},
+    ["nergalle"] =            {HD = 10,   XP = 779,    MR = 60,},
+    ["two-headed ogre"] =     {HD = 10,   XP = 826,    MR = 40,},
+    ["ogre mage"] =           {HD = 10,   XP = 851,    MR = 80,},
+    ["fannar"] =              {HD = 10,   XP = 882,    MR = 80,},
+    ["josephine"] =           {HD = 10,   XP = 912,    MR = 60,},
 
-    ["louise"] =          {HD = 13,  XP = 1207,   MR = 80,},
+    ["azrael"] =              {HD = 11,   XP = 992,    MR = 40,},
+    ["agnes"] =               {HD = 11,   XP = 1454,   MR = 100,},
 
-    ["roxanne"] =         {HD = 14,  XP = 1368,   MR = inf,},
-    ["donald"] =          {HD = 14,  XP = 1374,   MR = 100,},
-    ["aizul"] =           {HD = 14,  XP = 1386,   MR = 120,},
-    ["frances"] =         {HD = 14,  XP = 1518,   MR = 100,},
-    ["murray"] =          {HD = 14,  XP = 1586,   MR = inf,},
+    ["boulder beetle"] =      {HD = 12,   XP = 831,    MR = 40,},
+    ["ice dragon"] =          {HD = 12,   XP = 870,    MR = 40,},
+    ["fire dragon"] =         {HD = 12,   XP = 914,    MR = 60,},
+    ["ettin"] =               {HD = 12,   XP = 933,    MR = 40,},
 
-    ["asterion"] =        {HD = 15,  XP = 1709,   MR = 100,},
-    ["mlioglotl"] =       {HD = 15,  XP = 1805,   MR = 120,},
-    ["zenata"] =          {HD = 15,  XP = 1864,   MR = 100,},
-    ["jorgrun"] =         {HD = 15,  XP = 1873,   MR = 120,},
-    ["wiglaf"] =          {HD = 15,  XP = 1913,   MR = 100,},
-    ["enchantress"] =     {HD = 15,  XP = 2328,   MR = 160,},
-    ["geryon"] =          {HD = 15,  XP = 2622,   MR = 120,},
+    ["hydra"] =               {HD = 13,   XP = 864,    MR = 60,},
+    ["ghost moth"] =          {HD = 13,   XP = 1204,   MR = 100,},
+    ["louise"] =              {HD = 13,   XP = 1207,   MR = 80,},
 
-    ["ilsuiw"] =          {HD = 16,  XP = 1338,   MR = 140,},
-    ["kirke"] =           {HD = 16,  XP = 1439,   MR = 100,},
-    ["polyphemus"] =      {HD = 16,  XP = 1540,   MR = 60,},
-    ["grunn"] =           {HD = 16,  XP = 1718,   MR = 100,},
-    ["rupert"] =          {HD = 16,  XP = 1862,   MR = 100,},
-    ["vashnia"] =         {HD = 16,  XP = 3195,   MR = 120,},
-    ["dispater"] =        {HD = 16,  XP = 5159,   MR = inf,},
-    ["gloorx vloq"] =     {HD = 16,  XP = 6736,   MR = inf,},
-    ["dissolution"] =     {HD = 16,  XP = 7370,   MR = 120,},
+    ["death yak"] =           {HD = 14,   XP = 813,    MR = 100,},
+    ["catoblepas"] =          {HD = 14,   XP = 846,    MR = 100,},
+    ["roxanne"] =             {HD = 14,   XP = 1368,   MR = inf,},
+    ["donald"] =              {HD = 14,   XP = 1374,   MR = 100,},
+    ["aizul"] =               {HD = 14,   XP = 1386,   MR = 120,},
+    ["storm dragon"] =        {HD = 14,   XP = 1402,   MR = 100,},
+    ["frances"] =             {HD = 14,   XP = 1518,   MR = 100,},
+    ["murray"] =              {HD = 14,   XP = 1586,   MR = inf,},
 
-    ["xak'krixis"] =      {HD = 17,  XP = 1492,   MR = 80,},
-    ["serpent of hell"] = {HD = 17,  XP = 6925,   MR = 180,},
-    ["mnoleg"] =          {HD = 17,  XP = 6890,   MR = inf,},
-    ["asmodeus"] =        {HD = 17,  XP = 8128,   MR = inf,},
+    ["guardian serpent"] =    {HD = 15,   XP = 460,    MR = 60,},
+    ["orc warlord"] =         {HD = 15,   XP = 1153,   MR = 60,},
+    ["nagaraja"] =            {HD = 15,   XP = 1333,   MR = 140,},
+    ["asterion"] =            {HD = 15,   XP = 1709,   MR = 100,},
+    ["mlioglotl"] =           {HD = 15,   XP = 1805,   MR = 120,},
+    ["zenata"] =              {HD = 15,   XP = 1864,   MR = 100,},
+    ["jorgrun"] =             {HD = 15,   XP = 1873,   MR = 120,},
+    ["wiglaf"] =              {HD = 15,   XP = 1913,   MR = 100,},
+    ["enchantress"] =         {HD = 15,   XP = 2328,   MR = 160,},
+    ["geryon"] =              {HD = 15,   XP = 2622,   MR = 120,},
 
-    ["jory"] =            {HD = 18,  XP = 2381,   MR = 160,},
-    ["nikola"] =          {HD = 18,  XP = 2438,   MR = 120,},
-    ["saint roka"] =      {HD = 18,  XP = 2900,   MR = 80,},
-    ["mara"] =            {HD = 18,  XP = 4430,   MR = 140,},
-    ["khufu"] =           {HD = 18,  XP = 4893,   MR = 160,},
-    ["ignacio"] =         {HD = 18,  XP = 6807,   MR = 160,},
-    ["ereshkigal"] =      {HD = 18,  XP = 6976,   MR = inf,},
+    ["stone giant"] =         {HD = 16,   XP = 1090,   MR = 80,},
+    ["frost giant"] =         {HD = 16,   XP = 1258,   MR = 80,},
+    ["fire giant"] =          {HD = 16,   XP = 1290,   MR = 80,},
+    ["ilsuiw"] =              {HD = 16,   XP = 1338,   MR = 140,},
+    ["kirke"] =               {HD = 16,   XP = 1439,   MR = 100,},
+    ["polyphemus"] =          {HD = 16,   XP = 1540,   MR = 60,},
+    ["quicksilver dragon"] =  {HD = 16,   XP = 1656,   MR = 140,},
+    ["grunn"] =               {HD = 16,   XP = 1718,   MR = 100,},
+    ["rupert"] =              {HD = 16,   XP = 1862,   MR = 100,},
+    ["vashnia"] =             {HD = 16,   XP = 3195,   MR = 120,},
+    ["dispater"] =            {HD = 16,   XP = 5159,   MR = inf,},
+    ["gloorx vloq"] =         {HD = 16,   XP = 6736,   MR = inf,},
+    ["dissolution"] =         {HD = 16,   XP = 7370,   MR = 120,},
 
-    ["mennas"] =          {HD = 19,  XP = 4370,   MR = 160,},
-    ["lom lobon"] =       {HD = 19,  XP = 6087,   MR = inf,},
+    ["tengu reaver"] =        {HD = 17,   XP = 1417,   MR = 60,},
+    ["shadow dragon"] =       {HD = 17,   XP = 1418,   MR = 120,},
+    ["xak'krixis"] =          {HD = 17,   XP = 1492,   MR = 80,},
+    ["serpent of hell"] =     {HD = 17,   XP = 6925,   MR = 180,},
+    ["mnoleg"] =              {HD = 17,   XP = 6890,   MR = inf,},
+    ["asmodeus"] =            {HD = 17,   XP = 8128,   MR = inf,},
 
-    ["gastronok"] =       {HD = 20,  XP = 1506,   MR = 80,},
-    ["norris"] =          {HD = 20,  XP = 2329,   MR = 140,},
-    ["bai suzhen"] =      {HD = 20,  XP = 3138,   MR = 100,},
-    ["sojobo"] =          {HD = 20,  XP = 3463,   MR = 140,},
-    ["xtahua"] =          {HD = 20,  XP = 3664,   MR = 180,},
+    ["jory"] =                {HD = 18,   XP = 2381,   MR = 160,},
+    ["nikola"] =              {HD = 18,   XP = 2438,   MR = 120,},
+    ["golden dragon"] =       {HD = 18,   XP = 2484,   MR = 180,},
+    ["saint roka"] =          {HD = 18,   XP = 2900,   MR = 80,},
+    ["mara"] =                {HD = 18,   XP = 4430,   MR = 140,},
+    ["khufu"] =               {HD = 18,   XP = 4893,   MR = 160,},
+    ["ignacio"] =             {HD = 18,   XP = 6807,   MR = 160,},
+    ["ereshkigal"] =          {HD = 18,   XP = 6976,   MR = inf,},
 
-    ["josephina"] =       {HD = 21,  XP = 3438,   MR = inf,},
-    ["royal jelly"] =     {HD = 21,  XP = 7603,   MR = 180,},
-    ["cerebov"] =         {HD = 21,  XP = 11754,  MR = inf,},
+    ["mennas"] =              {HD = 19,   XP = 4370,   MR = 160,},
+    ["lom lobon"] =           {HD = 19,   XP = 6087,   MR = inf,},
 
-    ["margery"] =         {HD = 22,  XP = 2809,   MR = 140,},
-    ["boris"] =           {HD = 22,  XP = 3205,   MR = inf,},
-    ["antaeus"] =         {HD = 22,  XP = 8877,   MR = inf,},
-    ["tiamat"] =          {HD = 22,  XP = 5133,   MR = 140,},
+    ["gastronok"] =           {HD = 20,   XP = 1506,   MR = 80,},
+    ["lich"] =                {HD = 20,   XP = 1745,   MR = inf,},
+    ["norris"] =              {HD = 20,   XP = 2329,   MR = 140,},
+    ["bai suzhen"] =          {HD = 20,   XP = 3138,   MR = 100,},
+    ["sojobo"] =              {HD = 20,   XP = 3463,   MR = 140,},
+    ["xtahua"] =              {HD = 20,   XP = 3664,   MR = 180,},
 
-    ["vv"] =              {HD = 23,  XP = 3226,   MR = 140,},
-    ["arachne"] =         {HD = 23,  XP = 3955,   MR = 80,},
-    ["frederick"] =       {HD = 23,  XP = 5151,   MR = 140,},
+    ["josephina"] =           {HD = 21,   XP = 3438,   MR = inf,},
+    ["royal jelly"] =         {HD = 21,   XP = 7603,   MR = 180,},
+    ["cerebov"] =             {HD = 21,   XP = 11754,  MR = inf,},
 
-    ["parghit"] =         {HD = 27,  XP = 3146,   MR = 140,},
+    ["margery"] =             {HD = 22,   XP = 2809,   MR = 140,},
+    ["boris"] =               {HD = 22,   XP = 3205,   MR = inf,},
+    ["antaeus"] =             {HD = 22,   XP = 8877,   MR = inf,},
+    ["tiamat"] =              {HD = 22,   XP = 5133,   MR = 140,},
 
-    ["lernaean hydra"] =  {HD = 30,  XP = 3031,   MR = 120,},
+    ["vv"] =                  {HD = 23,   XP = 3226,   MR = 140,},
+    ["arachne"] =             {HD = 23,   XP = 3955,   MR = 80,},
+    ["frederick"] =           {HD = 23,   XP = 5151,   MR = 140,},
+
+    ["parghit"] =             {HD = 27,   XP = 3146,   MR = 140,},
+    ["ancient lich"] =        {HD = 27,   XP = 4758,   MR = inf,},
+    ["dread lich"] =          {HD = 27,   XP = 5171,   MR = inf,},
+
+    ["lernaean hydra"] =      {HD = 30,   XP = 3031,   MR = 120,},
   } --
 
   function fFindBySubstrInDict(str, dict)
