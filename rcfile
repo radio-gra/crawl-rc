@@ -11,7 +11,7 @@
 #
 
 : gVersion = "0.32"
-: gRcRevision = "2"
+: gRcRevision = "3"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -101,7 +101,6 @@
       crawl.setopt("bindkey = [NP5] CMD_NO_CMD_DEFAULT")
     end
 
-
     if gPresetConfig[lCfgValue].allowAutoExplore then
       crawl.setopt("bindkey = [`] CMD_EXPLORE")
       crawl.setopt("bindkey = [o] CMD_NO_CMD_DEFAULT")
@@ -112,6 +111,7 @@
 
     crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
     crawl.setopt("autopickup = " .. gPresetConfig[lCfgValue].autopickupString)
+    crawl.setopt("default_autopickup = " .. gPresetConfig[lCfgValue].defaultAutopickup)
 
     if gPresetConfig[lCfgValue].gems then
       crawl.setopt("always_show_gems = true")crawl.setopt("more_gem_info = true")
@@ -190,21 +190,9 @@ auto_hide_spells=true
 skill_focus = false
 show_more = false
 dump_message_count = 50
-dump_order  = header
-dump_order += testdump
-dump_order += "testdump2"
-dump_order += return "testdump3"
-dump_order += "return "testdump4""
-dump_order += fPrintConfigInfo
-dump_order += "fPrintConfigInfo"
-dump_order += fPrintConfigInfo()
-dump_order += --print("testdump5")
-dump_order += print("testdump6")
-dump_order += "print("testdump6")"
-#hiscore,stats,misc,apostles,inventory,skills,spells,
-#dump_order += overview,mutations,messages,screenshot,monlist,kills,
-#dump_order += notes,screenshots,vaults,skill_gains,action_counts
-#dump_order += fPrintConfigInfo(true)
+dump_order  = header,hiscore,stats,misc,apostles,inventory,skills,spells,
+dump_order += overview,mutations,messages,screenshot,monlist,kills,
+dump_order += notes,screenshots,vaults,skill_gains,action_counts
 ###############################################################################################
 ####################################### Ad hoc settings #######################################
 ###############################################################################################
