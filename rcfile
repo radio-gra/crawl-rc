@@ -11,7 +11,7 @@
 #
 
 : gVersion = "0.32"
-: gRcRevision = "3"
+: gRcRevision = "4"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -436,6 +436,7 @@ mon_glyph += ancient lich               : yellow
 mon_glyph += orc sorcerer               : x00F6
 mon_glyph += shock serpent              : x015A
 mon_glyph += merfolk avatar             : x0271
+mon_glyph += dancing weapon             : x01AA
 mon_glyph += centaur warrior            : x010B
 mon_glyph += demonic crawler            : x0161
 mon_glyph += orc high priest            : x00F6
