@@ -4,19 +4,17 @@
 #todo: find a way to exclude portals from > rotation
 #todo: preset-dependent glyphs
 #todo: convenient ring switching
+#todo: hotkeys via inscription
 #https://doc.dcss.io
-#
-#  c_answer_prompt
-#  c_assign_invletter
-#
 
 : gVersion = "0.32"
-: gRcRevision = "4"
+: gRcRevision = "5"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
 #: gPreset = "TurnCount"
 : gInitCompleted = false
+: gRuntimeChecks = {}
 
 {
   gPresetConfig = {
@@ -25,11 +23,15 @@
       allowAutoExplore = true,
       autofightStop = 70,
       autopickupString = "$?!+(/}",
+      avoidShallow = false,
       defaultAutopickup = "true",
+      fewerTravelInterrupts = true,
       gems = true,
       hpWarning = 33,
-      travelOpenDoors = "true",
+      safeConsumables = false,
       safeMove = true,
+      showGameTime = "true",
+      travelOpenDoors = "true",
       warnHatches = "true",
     },
     cfgStreak = {
@@ -37,11 +39,15 @@
       allowAutoExplore = true,
       autofightStop = 80,
       autopickupString = "$?!+(/}",
+      avoidShallow = true,
       defaultAutopickup = "true",
+      fewerTravelInterrupts = false,
       gems = false,
       hpWarning = 50,
-      travelOpenDoors = "false",
+      safeConsumables = true,
       safeMove = true,
+      showGameTime = "true",
+      travelOpenDoors = "false",
       warnHatches = "true",
     },
     cfgRealTime = {
@@ -49,11 +55,15 @@
       allowAutoExplore = true,
       autofightStop = 25,
       autopickupString = "$?!+(/}=",
+      avoidShallow = false,
       defaultAutopickup = "true",
+      fewerTravelInterrupts = true,
       gems = false,
       hpWarning = 33,
-      travelOpenDoors = "true",
+      safeConsumables = false,
       safeMove = false,
+      showGameTime = "true",
+      travelOpenDoors = "true",
       warnHatches = "false",
     },
     cfgTurnCount = {
@@ -61,11 +71,15 @@
       allowAutoExplore = false,
       autofightStop = 80,
       autopickupString = "",
+      avoidShallow = true,
       defaultAutopickup = "false",
+      fewerTravelInterrupts = false,
       gems = true,
       hpWarning = 33,
-      travelOpenDoors = "false",
+      safeConsumables = true,
       safeMove = true,
+      showGameTime = "false",
+      travelOpenDoors = "false",
       warnHatches = "true",
     },
   } --
@@ -92,6 +106,13 @@
     crawl.setopt("bindkey = [y] " .. lSafeOrRegular .. "_UP_LEFT")
   end
 
+  function fSetSafeConsumables(enable)
+    if enable then
+      crawl.setopt("autoinscribe += potion:!q")
+      crawl.setopt("autoinscribe += scroll:!r")
+    end
+  end
+
   function fApplyPreset(preset)
     local lCfgValue = "cfg" .. preset
 
@@ -111,17 +132,31 @@
 
     crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
     crawl.setopt("autopickup = " .. gPresetConfig[lCfgValue].autopickupString)
+
+    if gPresetConfig[lCfgValue].avoidShallow then
+      table.insert(gRuntimeChecks, "fCheckAvoidShallow")
+    end
+
     crawl.setopt("default_autopickup = " .. gPresetConfig[lCfgValue].defaultAutopickup)
 
+    if gPresetConfig[lCfgValue].fewerTravelInterrupts then
+      crawl.setopt("interrupt_travel -= sense_monster")
+      crawl.setopt("interrupt_travel -= ancestor_hp")
+    end
+
     if gPresetConfig[lCfgValue].gems then
-      crawl.setopt("always_show_gems = true")crawl.setopt("more_gem_info = true")
+      crawl.setopt("always_show_gems = true")
+      crawl.setopt("more_gem_info = true")
     else
-      crawl.setopt("always_show_gems = false")crawl.setopt("more_gem_info = false")
+      crawl.setopt("always_show_gems = false")
+      crawl.setopt("more_gem_info = false")
     end
 
     crawl.setopt("hp_warning = " .. gPresetConfig[lCfgValue].hpWarning)
     crawl.setopt("travel_open_doors = " .. gPresetConfig[lCfgValue].travelOpenDoors)
+    fSetSafeConsumables(gPresetConfig[lCfgValue].safeConsumables)
     fSetSafeMove(gPresetConfig[lCfgValue].safeMove)
+    crawl.setopt("show_game_time = " .. gPresetConfig[lCfgValue].showGameTime)
     crawl.setopt("warn_hatches = " .. gPresetConfig[lCfgValue].warnHatches)
   end
 
@@ -161,11 +196,29 @@
       fApplyPreset(gPreset)
       fStartOpenSkillMenu()
       gInitCompleted = true
+      crawl.sendkeys({18})
     end
+  end
+
+  function fCheckAvoidShallow()
+    if you.race() == "Merfolk" or you.race() == "Barachi" or you.race() == "Octopode" or you.race() == "Pale Draconian"
+    or you.race() == "Naga" or you.race() == "Armataur" or you.race == "Troll" or you.race == "Oni"
+    or you.transform() == "snake"
+    or you.flying()
+    then
+      crawl.setopt("travel_avoid_terrain = ")
+    else
+      crawl.setopt("travel_avoid_terrain = shallow water, deep water")
+    end
+  end
+
+  function fRunChecks()
+    util.foreach(gRuntimeChecks, function(fname) _G[fname]() end)
   end
 
   function ready()
     fOnInit()
+    fRunChecks()
   end
 
 }
@@ -180,6 +233,7 @@ rest_wait_ancestor = true
 equip_unequip = true
 easy_confirm = all
 fail_severity_to_confirm = -1
+fail_severity_to_quiver = 5
 enable_recast_spell = false
 single_column_item_menus = false
 hp_colour = 66:yellow, 33:red
@@ -190,9 +244,14 @@ auto_hide_spells=true
 skill_focus = false
 show_more = false
 dump_message_count = 50
+travel_delay = -1
+show_travel_trail = true
+fire_order = launcher, inscribed, throwing, evokable, spell
+note_chat_messages = false
 dump_order  = header,hiscore,stats,misc,apostles,inventory,skills,spells,
 dump_order += overview,mutations,messages,screenshot,monlist,kills,
 dump_order += notes,screenshots,vaults,skill_gains,action_counts
+dump_order += turns_by_place, kills_by_place
 ###############################################################################################
 ####################################### Ad hoc settings #######################################
 ###############################################################################################
@@ -404,6 +463,13 @@ spell_slot ^=Dragon's Call:a
 spell_slot ^=Fire Storm:a
 spell_slot ^=Polar Vortex:a
 spell_slot ^=Shatter:a
+###############################################################################################
+####################################### Ability slots #########################################
+###############################################################################################
+ability_slot ^=Draw Escape:q
+ability_slot ^=Draw Destruction:w
+ability_slot ^=Draw Summoning:e
+ability_slot ^=Draw Stack:r
 ###############################################################################################
 ####################################### Glyphs & colors #######################################
 ###############################################################################################
@@ -774,4 +840,7 @@ mon_glyph += alligator snapping turtle  : x0167
 }
 
 macros+= M \{F2} ===fPrintAllMonsInfo
+macros+= M \{F3} F*
+macros+= M \{F4} w*
+marcos+= M \{F5} Q*
 ###############################################################################################
