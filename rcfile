@@ -8,7 +8,7 @@
 #https://doc.dcss.io
 
 : gVersion = "0.32"
-: gRcRevision = "5"
+: gRcRevision = "6"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -108,8 +108,23 @@
 
   function fSetSafeConsumables(enable)
     if enable then
-      crawl.setopt("autoinscribe += potion:!q")
-      crawl.setopt("autoinscribe += scroll:!r")
+      crawl.setopt("autoinscribe += potions?:!q")
+
+      crawl.setopt("autoinscribe += unidentified.*scrolls?:!r")
+      crawl.setopt("autoinscribe += scrolls? of acquirement:!r")
+      crawl.setopt("autoinscribe += scrolls? of blink:!r")
+      crawl.setopt("autoinscribe += scrolls? of butterflies:!r")
+      crawl.setopt("autoinscribe += scrolls? of teleportation:!r")
+      crawl.setopt("autoinscribe += scrolls? of fear:!r")
+      crawl.setopt("autoinscribe += scrolls? of fog:!r")
+      crawl.setopt("autoinscribe += scrolls? of summoning:!r")
+      crawl.setopt("autoinscribe += scrolls? of silence:!r")
+      crawl.setopt("autoinscribe += scrolls? of vulnerability:!r")
+      crawl.setopt("autoinscribe += scrolls? of torment:!r")
+      crawl.setopt("autoinscribe += scrolls? of poison:!r")
+      crawl.setopt("autoinscribe += scrolls? of immolation:!r")
+      crawl.setopt("autoinscribe += scrolls? of revelation:!r")
+      crawl.setopt("autoinscribe += scrolls? of noise:!r")
     end
   end
 
@@ -133,9 +148,10 @@
     crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
     crawl.setopt("autopickup = " .. gPresetConfig[lCfgValue].autopickupString)
 
-    if gPresetConfig[lCfgValue].avoidShallow then
-      table.insert(gRuntimeChecks, "fCheckAvoidShallow")
-    end
+--  "travel_avoid_terrain=" doesn't work
+--    if gPresetConfig[lCfgValue].avoidShallow then
+--      table.insert(gRuntimeChecks, "fCheckAvoidShallow")
+--    end
 
     crawl.setopt("default_autopickup = " .. gPresetConfig[lCfgValue].defaultAutopickup)
 
@@ -196,7 +212,6 @@
       fApplyPreset(gPreset)
       fStartOpenSkillMenu()
       gInitCompleted = true
-      crawl.sendkeys({18})
     end
   end
 
@@ -513,6 +528,7 @@ mon_glyph += emperor scorpion           : x015F
 mon_glyph += guardian serpent           : x015C
 mon_glyph += deep elf sorcerer          : x00EB
 mon_glyph += salamander tyrant          : x0147
+mon_glyph += quicksilver dragon         : x04A8
 mon_glyph += ironbound convoker         : a
 mon_glyph += ironbound preserver        : a
 mon_glyph += deep elf annihilator       : x00EB
