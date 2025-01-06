@@ -1,14 +1,13 @@
 #todo: custom variable configs, extending the presets e.g. "cfg_RT_MiFi01"
 #todo: smart highlighting, depending on XL and species
 #todo: preset-dependent force_more
-#todo: find a way to exclude portals from > rotation
 #todo: preset-dependent glyphs
 #todo: convenient ring switching
 #todo: hotkeys via inscription
 #https://doc.dcss.io
 
 : gVersion = "0.32"
-: gRcRevision = "6"
+: gRcRevision = "7"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -110,7 +109,6 @@
     if enable then
       crawl.setopt("autoinscribe += potions?:!q")
 
-      crawl.setopt("autoinscribe += unidentified.*scrolls?:!r")
       crawl.setopt("autoinscribe += scrolls? of acquirement:!r")
       crawl.setopt("autoinscribe += scrolls? of blink:!r")
       crawl.setopt("autoinscribe += scrolls? of butterflies:!r")
@@ -148,10 +146,9 @@
     crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
     crawl.setopt("autopickup = " .. gPresetConfig[lCfgValue].autopickupString)
 
---  "travel_avoid_terrain=" doesn't work
---    if gPresetConfig[lCfgValue].avoidShallow then
---      table.insert(gRuntimeChecks, "fCheckAvoidShallow")
---    end
+    if gPresetConfig[lCfgValue].avoidShallow then
+      table.insert(gRuntimeChecks, "fCheckAvoidShallow")
+    end
 
     crawl.setopt("default_autopickup = " .. gPresetConfig[lCfgValue].defaultAutopickup)
 
@@ -182,27 +179,32 @@
     end
   end
 
-  function fPrintConfigInfo(dump)
+  function fdump()
+    return "Config for " .. gVersion .. ", revision " .. gRcRevision .. ", preset " .. gPreset .. "\n"
+  end
+
+  function fGetConfigInfo()
     local lText =
         "Using config for version <yellow>" .. gVersion .. "</yellow> (revision <yellow>" .. gRcRevision .. "</yellow>)"
       .. "\n"
       .. "Using preset <yellow>" .. gPreset .. "</yellow>"
-    if dump then
-      return lText
-    else
-      local lfPretty = function (c)
-        return "<".. c .. ">" .. "." .. "</".. c .. ">"
-      end
-      local lUpper = lfPretty("black")..lfPretty("red")..lfPretty("green")..lfPretty("brown")..lfPretty("blue")
-        ..lfPretty("lightmagenta")..lfPretty("cyan")..lfPretty("white")
-      local lLower = lfPretty("lightgrey") ..lfPretty("lightred")..lfPretty("lightgreen")..lfPretty("yellow")
-        ..lfPretty("lightblue")..lfPretty("magenta")..lfPretty("lightcyan")..lfPretty("darkgrey")
-      crawl.mpr(
-        lUpper .. lUpper ..lUpper ..lUpper ..lUpper
-        .. "\n"
-        .. lText .. "\n" .. lLower .. lLower .. lLower .. lLower .. lLower
-      )
+    return lText
+  end
+
+  function fPrintConfigInfo()
+    local lInfo = fGetConfigInfo()
+    local lfPretty = function (c)
+      return "<".. c .. ">" .. "." .. "</".. c .. ">"
     end
+    local lUpper = lfPretty("black")..lfPretty("red")..lfPretty("green")..lfPretty("brown")..lfPretty("blue")
+      ..lfPretty("lightmagenta")..lfPretty("cyan")..lfPretty("white")
+    local lLower = lfPretty("lightgrey") ..lfPretty("lightred")..lfPretty("lightgreen")..lfPretty("yellow")
+      ..lfPretty("lightblue")..lfPretty("magenta")..lfPretty("lightcyan")..lfPretty("darkgrey")
+    crawl.mpr(
+      lUpper .. lUpper ..lUpper ..lUpper ..lUpper
+      .. "\n"
+      .. lInfo .. "\n" .. lLower .. lLower .. lLower .. lLower .. lLower
+    )
   end
 
   function fOnInit()
@@ -217,7 +219,7 @@
 
   function fCheckAvoidShallow()
     if you.race() == "Merfolk" or you.race() == "Barachi" or you.race() == "Octopode" or you.race() == "Pale Draconian"
-    or you.race() == "Naga" or you.race() == "Armataur" or you.race == "Troll" or you.race == "Oni"
+    or you.race() == "Naga" or you.race() == "Armataur" or you.race() == "Troll" or you.race() == "Oni"
     or you.transform() == "snake"
     or you.flying()
     then
@@ -263,10 +265,10 @@ travel_delay = -1
 show_travel_trail = true
 fire_order = launcher, inscribed, throwing, evokable, spell
 note_chat_messages = false
-dump_order  = header,hiscore,stats,misc,apostles,inventory,skills,spells,
-dump_order += overview,mutations,messages,screenshot,monlist,kills,
-dump_order += notes,screenshots,vaults,skill_gains,action_counts
-dump_order += turns_by_place, kills_by_place
+dump_order = fdump
+dump_order += header,-,hiscore,stats,mutations,apostles,-,inventory,-,skills,skill_gains,-
+dump_order += spells,-,action_counts,-,misc,overview,-,screenshot,monlist,messages,-
+dump_order += notes,screenshots,-,kills,-,turns_by_place, kills_by_place,-,vaults
 ###############################################################################################
 ####################################### Ad hoc settings #######################################
 ###############################################################################################
@@ -278,6 +280,22 @@ unusual_monster_items += venom, electro, drain, resistance, holy
 autoinscribe += atropa:blind & confuse
 autoinscribe += curare:slow
 autoinscribe += datura:frenzy
+autoinscribe += wand of iceblast:@v1
+autoinscribe += wand of roots:@v1
+autoinscribe += wand of warping:@v1
+autoinscribe += wand of acid:@v2
+autoinscribe += wand of light:@v2
+autoinscribe += wand of quicksilver:@v2
+autoinscribe += lightning rod:@v3
+autoinscribe += tin of tremorstones:@v4
+autoinscribe += poisoned darts?:@Q1
+autoinscribe += boomerangs?:@Q2
+autoinscribe += (.*[^r] javelins?):@Q3
+autoinscribe += silver javelins?:@Q4
+autoinscribe += curare:@f1
+autoinscribe += throwing nets?:@f2
+autoinscribe += dispersal:@f3
+autoinscribe += large rocks?:@f4
 ###############################################################################################
 ######################################## Force mores ##########################################
 ###############################################################################################
@@ -343,13 +361,17 @@ item_slot ^= wand of mindburst:D
 item_slot ^= wand of polymorph:E
 item_slot ^= wand of flame:F
 
-item_slot ^= lighting rod:G
+item_slot ^= lightning rod:G
 item_slot ^= phial of floods:G
-item_slot ^= tin of thermostones:b
+item_slot ^= tin of tremorstones:b
 item_slot ^= condenser vane:b
 item_slot ^= phantom mirror:c
 item_slot ^= box of beasts:d
 item_slot ^= sack of spiders:d
+
+item_slot ^= (dagger|short sword|rapier|quick blade|staff of|quarterstaff|lajatang|whip|mace|flail|morningstar):-wqer
+item_slot ^= (eveningstar|demon whip|hand axe|war axe|broad axe|spear|trident|demon trident|long sword|falchion):-wqer
+item_slot ^= (scimitar|demon blade|double sword|sacred scourge|trishula|eudemon blade|sling|shortbow):-wqer
 ###############################################################################################
 ######################################## Spell slots  #########################################
 ###############################################################################################
@@ -489,6 +511,10 @@ ability_slot ^=Draw Stack:r
 ####################################### Glyphs & colors #######################################
 ###############################################################################################
 feature   += Zot trap                   { x2040, red, red, red}
+feature   += stone wall                 { , , white }
+feature   += rock wall                  { , , brown }
+feature   += metal wall                 { , , lightcyan }
+feature   += crystal wall               { , , green }
 mon_glyph += warg                       : x045B
 mon_glyph += aizul                      : x015C
 mon_glyph += satyr                      : x010B
