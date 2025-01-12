@@ -1,13 +1,11 @@
 #todo: custom variable configs, extending the presets e.g. "cfg_RT_MiFi01"
-#todo: smart highlighting, depending on XL and species
 #todo: preset-dependent force_more
 #todo: preset-dependent glyphs
-#todo: convenient ring switching
-#todo: hotkeys via inscription
+#todo: spell failure calcs
 #https://doc.dcss.io
 
 : gVersion = "0.32"
-: gRcRevision = "7"
+: gRcRevision = "8"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -107,22 +105,32 @@
 
   function fSetSafeConsumables(enable)
     if enable then
-      crawl.setopt("autoinscribe += potions?:!q")
+      crawl.setopt("autoinscribe += potions? of experience:!q")
+      crawl.setopt("autoinscribe += potions? of haste:!q")
+      crawl.setopt("autoinscribe += potions? of invisibility:!q")
+      crawl.setopt("autoinscribe += potions? of heal wounds:!q")
+      crawl.setopt("autoinscribe += potions? of curing:!q")
+      crawl.setopt("autoinscribe += potions? of might:!q")
+      crawl.setopt("autoinscribe += potions? of brilliance:!q")
+      crawl.setopt("autoinscribe += potions? of magic:!q")
+      crawl.setopt("autoinscribe += potions? of cancellation:!q")
+      crawl.setopt("autoinscribe += potions? of resistance:!q")
+      crawl.setopt("autoinscribe += potions? of enlightenment:!q")
+      crawl.setopt("autoinscribe += potions? of mutation:!q")
+      crawl.setopt("autoinscribe += potions? of ambrosia:!q")
+      crawl.setopt("autoinscribe += potions? of berserk rage:!q")
+      crawl.setopt("autoinscribe += potions? of degeneration:!q")
 
       crawl.setopt("autoinscribe += scrolls? of acquirement:!r")
-      crawl.setopt("autoinscribe += scrolls? of blink:!r")
       crawl.setopt("autoinscribe += scrolls? of butterflies:!r")
       crawl.setopt("autoinscribe += scrolls? of teleportation:!r")
       crawl.setopt("autoinscribe += scrolls? of fear:!r")
       crawl.setopt("autoinscribe += scrolls? of fog:!r")
       crawl.setopt("autoinscribe += scrolls? of summoning:!r")
       crawl.setopt("autoinscribe += scrolls? of silence:!r")
-      crawl.setopt("autoinscribe += scrolls? of vulnerability:!r")
       crawl.setopt("autoinscribe += scrolls? of torment:!r")
       crawl.setopt("autoinscribe += scrolls? of poison:!r")
-      crawl.setopt("autoinscribe += scrolls? of immolation:!r")
       crawl.setopt("autoinscribe += scrolls? of revelation:!r")
-      crawl.setopt("autoinscribe += scrolls? of noise:!r")
     end
   end
 
@@ -213,6 +221,7 @@
       fPrintConfigInfo()
       fApplyPreset(gPreset)
       fStartOpenSkillMenu()
+      table.insert(gRuntimeChecks, "fSmartUnusual")
       gInitCompleted = true
     end
   end
@@ -226,6 +235,33 @@
       crawl.setopt("travel_avoid_terrain = ")
     else
       crawl.setopt("travel_avoid_terrain = shallow water, deep water")
+    end
+  end
+
+  function fSmartUnusual()
+    local lDefaultUnusual = "wand,disto,chaos,curare,atropa,dispersal,throwing net,resistance"
+    crawl.setopt("unusual_monster_items = " .. lDefaultUnusual)
+    if you.res_poison() <= 0 then
+      crawl.setopt("unusual_monster_items += " .. "venom, curare")
+    end
+    if you.res_fire() <= 0 then
+      crawl.setopt("unusual_monster_items += " .. "flaming")
+    end
+    if you.res_cold() <= 0 then
+      crawl.setopt("unusual_monster_items += " .. "freezing")
+    end
+    if you.res_draining() <= 0 then
+      crawl.setopt("unusual_monster_items += " .. "draining")
+    end
+    if you.res_shock() <= 0 then
+      crawl.setopt("unusual_monster_items += " .. "electrocution")
+    end
+    if you.race() == "Ghoul" or you.race() == "Mummy" or you.race() == "Demonspawn" or you.race() == "Vampire" or
+      you.transform() == "death" or you.transform() == "bat" then
+        crawl.setopt("unusual_monster_items += " .. "holy")
+    end
+    if you.race() ~= "Ghoul" and you.race() ~= "Mummy" and you.race() ~= "Formicid" and you.transform() ~= "death" then
+      crawl.setopt("unusual_monster_items += " .. "datura")
     end
   end
 
@@ -273,12 +309,11 @@ dump_order += notes,screenshots,-,kills,-,turns_by_place, kills_by_place,-,vault
 ####################################### Ad hoc settings #######################################
 ###############################################################################################
 force_spell_targeter += Iskenderun's Mystic Blast
-unusual_monster_items += venom, electro, drain, resistance, holy
 ###############################################################################################
 ######################################## Autoinscribe #########################################
 ###############################################################################################
 autoinscribe += atropa:blind & confuse
-autoinscribe += curare:slow
+autoinscribe += curare:slow @f1
 autoinscribe += datura:frenzy
 autoinscribe += wand of iceblast:@v1
 autoinscribe += wand of roots:@v1
@@ -292,12 +327,12 @@ autoinscribe += poisoned darts?:@Q1
 autoinscribe += boomerangs?:@Q2
 autoinscribe += (.*[^r] javelins?):@Q3
 autoinscribe += silver javelins?:@Q4
-autoinscribe += curare:@f1
 autoinscribe += throwing nets?:@f2
 autoinscribe += dispersal:@f3
 autoinscribe += large rocks?:@f4
+autoinscribe += ring of:@P
 ###############################################################################################
-######################################## Force mores ##########################################
+################################### Force mores & flashes #####################################
 ###############################################################################################
 force_more_message += malevolent force
 force_more_message += mastered
@@ -307,6 +342,11 @@ force_more_message += channel is weakening
 force_more_message += reaping aura is weakening
 force_more_message += grants you
 force_more_message += you have drawn
+force_more_message += the power ruling this place vanishes
+force_more_message += you are being watched by something
+
+flash_screen_message += the power ruling this place vanishes
+flash_screen_message += you feel your power leaking away
 ###############################################################################################
 ######################################## Item sorting #########################################
 ###############################################################################################
@@ -511,10 +551,14 @@ ability_slot ^=Draw Stack:r
 ####################################### Glyphs & colors #######################################
 ###############################################################################################
 feature   += Zot trap                   { x2040, red, red, red}
-feature   += stone wall                 { , , white }
 feature   += rock wall                  { , , brown }
+feature   += translucent rock wall      { , , yellow }
+feature   += stone wall                 { , , white }
+feature   += translucent stone wall     { , , lightred }
 feature   += metal wall                 { , , lightcyan }
 feature   += crystal wall               { , , green }
+feature   += unnaturally                { , , magenta }
+feature   += translucent unnaturally    { , , cyan }
 mon_glyph += warg                       : x045B
 mon_glyph += aizul                      : x015C
 mon_glyph += satyr                      : x010B
@@ -564,6 +608,7 @@ mon_glyph += deep elf demonologist      : x00EB
 mon_glyph += deep elf elementalist      : x00EB
 mon_glyph += deep elf high priest       : x00EB
 mon_glyph += ironbound frostheart       : a
+mon_glyph += elemental wellspring       : x04A8 white
 mon_glyph += merged slime creature      : x0132
 mon_glyph += deep elf master archer     : x00EB brown
 mon_glyph += alligator snapping turtle  : x0167
