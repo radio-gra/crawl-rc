@@ -5,7 +5,7 @@
 #https://doc.dcss.io
 
 : gVersion = "0.32"
-: gRcRevision = "8"
+: gRcRevision = "9"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -105,6 +105,9 @@
 
   function fSetSafeConsumables(enable)
     if enable then
+      crawl.setopt("autoinscribe += unidentified.*(potion):!q")
+      crawl.setopt("autoinscribe += unidentified.*(scroll):!r")
+
       crawl.setopt("autoinscribe += potions? of experience:!q")
       crawl.setopt("autoinscribe += potions? of haste:!q")
       crawl.setopt("autoinscribe += potions? of invisibility:!q")
@@ -242,7 +245,7 @@
     local lDefaultUnusual = "wand,disto,chaos,curare,atropa,dispersal,throwing net,resistance"
     crawl.setopt("unusual_monster_items = " .. lDefaultUnusual)
     if you.res_poison() <= 0 then
-      crawl.setopt("unusual_monster_items += " .. "venom, curare")
+      crawl.setopt("unusual_monster_items += " .. "venom")
     end
     if you.res_fire() <= 0 then
       crawl.setopt("unusual_monster_items += " .. "flaming")
@@ -262,6 +265,18 @@
     end
     if you.race() ~= "Ghoul" and you.race() ~= "Mummy" and you.race() ~= "Formicid" and you.transform() ~= "death" then
       crawl.setopt("unusual_monster_items += " .. "datura")
+    end
+  end
+
+  function safe_upstairs()
+    if you.branch() == "Gauntlet" or you.branch() == "Trove" then
+       crawl.formatted_mpr("Really exit portal? (1 or y to confirm)", "prompt")
+       local res = crawl.getch()
+       if string.lower(string.char(res)) == "y" or string.lower(string.char(res)) == "1" then
+         crawl.sendkeys("<")
+       end
+    else
+       crawl.sendkeys("<")
     end
   end
 
@@ -347,6 +362,7 @@ force_more_message += you are being watched by something
 
 flash_screen_message += the power ruling this place vanishes
 flash_screen_message += you feel your power leaking away
+flash_screen_message += Jiyva alters your
 ###############################################################################################
 ######################################## Item sorting #########################################
 ###############################################################################################
@@ -559,6 +575,7 @@ feature   += metal wall                 { , , lightcyan }
 feature   += crystal wall               { , , green }
 feature   += unnaturally                { , , magenta }
 feature   += translucent unnaturally    { , , cyan }
+feature   += slime covered              { , , lightgreen}
 mon_glyph += warg                       : x045B
 mon_glyph += aizul                      : x015C
 mon_glyph += satyr                      : x010B
@@ -581,6 +598,7 @@ mon_glyph += hell hound                 : x045B
 mon_glyph += marrowcuda                 : x03DC
 mon_glyph += orb spider                 : x015B
 mon_glyph += saint roka                 : x00F6
+mon_glyph += bound soul                 : x03A9 white
 mon_glyph += orc warlord                : x00F6
 mon_glyph += necromancer                : a
 mon_glyph += ancient lich               : yellow
@@ -929,5 +947,6 @@ mon_glyph += alligator snapping turtle  : x0167
 macros+= M \{F2} ===fPrintAllMonsInfo
 macros+= M \{F3} F*
 macros+= M \{F4} w*
-marcos+= M \{F5} Q*
+macros+= M \{F5} Q*
+macros+= M < ===safe_upstairs
 ###############################################################################################
