@@ -5,13 +5,14 @@
 #https://doc.dcss.io
 
 : gVersion = "0.32"
-: gRcRevision = "9"
+: gRcRevision = "10"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
 #: gPreset = "TurnCount"
 : gInitCompleted = false
 : gRuntimeChecks = {}
+: gIsSafeMove = false
 
 {
   gPresetConfig = {
@@ -22,6 +23,7 @@
       autopickupString = "$?!+(/}",
       avoidShallow = false,
       defaultAutopickup = "true",
+      fewerAnimations = false,
       fewerTravelInterrupts = true,
       gems = true,
       hpWarning = 33,
@@ -38,6 +40,7 @@
       autopickupString = "$?!+(/}",
       avoidShallow = true,
       defaultAutopickup = "true",
+      fewerAnimations = false,
       fewerTravelInterrupts = false,
       gems = false,
       hpWarning = 50,
@@ -54,6 +57,7 @@
       autopickupString = "$?!+(/}=",
       avoidShallow = false,
       defaultAutopickup = "true",
+      fewerAnimations = true,
       fewerTravelInterrupts = true,
       gems = false,
       hpWarning = 33,
@@ -70,6 +74,7 @@
       autopickupString = "",
       avoidShallow = true,
       defaultAutopickup = "false",
+      fewerAnimations = false,
       fewerTravelInterrupts = false,
       gems = true,
       hpWarning = 33,
@@ -101,6 +106,16 @@
     crawl.setopt("bindkey = [b] " .. lSafeOrRegular .. "_DOWN_LEFT")
     crawl.setopt("bindkey = [h] " .. lSafeOrRegular .. "_LEFT")
     crawl.setopt("bindkey = [y] " .. lSafeOrRegular .. "_UP_LEFT")
+  end
+
+  function fToggleSafeMove()
+    gIsSafeMove = not gIsSafeMove
+    fSetSafeMove(gIsSafeMove)
+    if gIsSafeMove then
+      crawl.mpr("<green>Safe move is ON</green>")
+    else
+      crawl.mpr("<red>Safe move is OFF</red>")
+    end
   end
 
   function fSetSafeConsumables(enable)
@@ -148,10 +163,8 @@
 
     if gPresetConfig[lCfgValue].allowAutoExplore then
       crawl.setopt("bindkey = [`] CMD_EXPLORE")
-      crawl.setopt("bindkey = [o] CMD_NO_CMD_DEFAULT")
     else
       crawl.setopt("bindkey = [`] CMD_NO_CMD_DEFAULT")
-      crawl.setopt("bindkey = [o] CMD_NO_CMD_DEFAULT")
     end
 
     crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
@@ -162,6 +175,10 @@
     end
 
     crawl.setopt("default_autopickup = " .. gPresetConfig[lCfgValue].defaultAutopickup)
+
+    if gPresetConfig[lCfgValue].fewerAnimations then
+      crawl.setopt("use_animations -= beam, player")
+    end
 
     if gPresetConfig[lCfgValue].fewerTravelInterrupts then
       crawl.setopt("interrupt_travel -= sense_monster")
@@ -179,7 +196,10 @@
     crawl.setopt("hp_warning = " .. gPresetConfig[lCfgValue].hpWarning)
     crawl.setopt("travel_open_doors = " .. gPresetConfig[lCfgValue].travelOpenDoors)
     fSetSafeConsumables(gPresetConfig[lCfgValue].safeConsumables)
-    fSetSafeMove(gPresetConfig[lCfgValue].safeMove)
+
+    gIsSafeMove = gPresetConfig[lCfgValue].safeMove
+    fSetSafeMove(gIsSafeMove)
+
     crawl.setopt("show_game_time = " .. gPresetConfig[lCfgValue].showGameTime)
     crawl.setopt("warn_hatches = " .. gPresetConfig[lCfgValue].warnHatches)
   end
@@ -320,10 +340,14 @@ dump_order = fdump
 dump_order += header,-,hiscore,stats,mutations,apostles,-,inventory,-,skills,skill_gains,-
 dump_order += spells,-,action_counts,-,misc,overview,-,screenshot,monlist,messages,-
 dump_order += notes,screenshots,-,kills,-,turns_by_place, kills_by_place,-,vaults
+bindkey = [o] CMD_NO_CMD_DEFAULT
+bindkey = [p] CMD_NO_CMD_DEFAULT
+bindkey = [Ins] CMD_PREV_CMD_AGAIN
 ###############################################################################################
 ####################################### Ad hoc settings #######################################
 ###############################################################################################
 force_spell_targeter += Iskenderun's Mystic Blast
+force_spell_targeter += Permafrost Eruption
 ###############################################################################################
 ######################################## Autoinscribe #########################################
 ###############################################################################################
@@ -359,10 +383,39 @@ force_more_message += grants you
 force_more_message += you have drawn
 force_more_message += the power ruling this place vanishes
 force_more_message += you are being watched by something
+force_more_message += Jiyva alters your
+force_more_message += Safe move is OFF
+force_more_message += Your transformation is almost over
+force_more_message += less wooden
 
 flash_screen_message += the power ruling this place vanishes
 flash_screen_message += you feel your power leaking away
 flash_screen_message += Jiyva alters your
+
+{
+function c_answer_prompt(prompt)
+  if prompt:find("near your battlesphere") or prompt:find("near your fire vort") then
+    return true
+  end
+end
+}
+###############################################################################################
+########################################### Macros ############################################
+###############################################################################################
+{
+  if gPreset == "TurnCount" then
+    crawl.setopt("macros+= M \{F1} zG")
+    crawl.setopt("macros+= M \{F3} F*")
+    crawl.setopt("macros+= M \{F4} w*")
+  end
+
+  if gPreset ~= "RealTime" then
+    crawl.setopt("macros+= M < ===safe_upstairs")
+  end
+}
+macros+= M \{F2} ===fPrintAllMonsInfo
+macros+= M \{F5} Q*
+macros+= M 0 ===fToggleSafeMove
 ###############################################################################################
 ######################################## Item sorting #########################################
 ###############################################################################################
@@ -459,7 +512,7 @@ spell_slot ^= Sublimation of Blood:T
 spell_slot ^= Call Canine Familiar:cC
 spell_slot ^= Confusing Touch:tc
 spell_slot ^= Dazzling Flash:df
-spell_slot ^= Frozen Ramparts:frt
+spell_slot ^= Frozen Ramparts:Rfrt
 spell_slot ^= Fugue of the Fallen:Ffe
 spell_slot ^= Hailstorm:tsT
 spell_slot ^= Inner Flame:fFeE
@@ -480,60 +533,60 @@ spell_slot ^=Airstrike:a
 spell_slot ^=Anguish:a
 spell_slot ^=Animate Armour:a
 spell_slot ^=Animate Dead:D
-spell_slot ^=Brom's Barrelling Boulder:a
-spell_slot ^=Cause Fear:a
+spell_slot ^=Brom's Barrelling Boulder:be
+spell_slot ^=Cause Fear:cfF
 spell_slot ^=Cigotuvi's Putrefaction:a
 spell_slot ^=Dimensional Bullseye:a
 spell_slot ^=Dispel Undead:de
-spell_slot ^=Flame Wave:a
+spell_slot ^=Flame Wave:efEF
 spell_slot ^=Fulminant Prism:t
 spell_slot ^=Ignite Poison:gG
 spell_slot ^=Iskenderun's Mystic Blast:T
 spell_slot ^=Leda's Liquefaction:d
-spell_slot ^=Martyr's Knell:a
+spell_slot ^=Martyr's Knell:eE
 spell_slot ^=Olgreb's Toxic Radiance:RT
 spell_slot ^=Passage of Golubria:+G
 spell_slot ^=Petrify:t
-spell_slot ^=Sticky Flame:a
-spell_slot ^=Summon Blazeheart Golem:a
+spell_slot ^=Sticky Flame:ct
+spell_slot ^=Summon Blazeheart Golem:G
 spell_slot ^=Summon Lightning Spire:G
 spell_slot ^=Vhi's Electric Charge:+v
 
 spell_slot ^=Alistair's Intoxication:a
 spell_slot ^=Arcjolt:a
-spell_slot ^=Borgnjor's Vile Clutch:v
+spell_slot ^=Borgnjor's Vile Clutch:vV
 spell_slot ^=Curse of Agony:a
 spell_slot ^=Fireball:f
 spell_slot ^=Freezing Cloud:fc
 spell_slot ^=Hoarfrost Cannonade:F
-spell_slot ^=Irradiate:r
+spell_slot ^=Irradiate:RrEe
 spell_slot ^=Iskenderun's Battlesphere:b
 spell_slot ^=Lee's Rapid Deconstruction:dr
 spell_slot ^=Metabolic Englaciation:a
 spell_slot ^=Silence:a
-spell_slot ^=Summon Forest:a
+spell_slot ^=Summon Forest:F
 spell_slot ^=Summon Mana Viper:V
-spell_slot ^=Yara's Violent Unravelling:Vv
+spell_slot ^=Yara's Violent Unravelling:VReE
 
 spell_slot ^=Bombard:rd
-spell_slot ^=Conjure Ball Lightning:a
+spell_slot ^=Conjure Ball Lightning:cb
 spell_slot ^=Death Channel:C
-spell_slot ^=Dispersal:d
+spell_slot ^=Dispersal:dD
 spell_slot ^=Eringya's Noxious Bog:x
-spell_slot ^=Gell's Gavotte:G
+spell_slot ^=Gell's Gavotte:g
 spell_slot ^=Permafrost Eruption:te
 spell_slot ^=Plasma Beam:e
-spell_slot ^=Sculpt Simulacrum:a
+spell_slot ^=Sculpt Simulacrum:sS
 spell_slot ^=Starburst:sb
 spell_slot ^=Summon Cactus Giant:C
 
-spell_slot ^=Enfeeble:a
-spell_slot ^=Haunt:a
-spell_slot ^=Hellfire Mortar:a
-spell_slot ^=Magnavolt:a
-spell_slot ^=Malign Gateway:a
+spell_slot ^=Enfeeble:eEfF
+spell_slot ^=Haunt:tT
+spell_slot ^=Hellfire Mortar:eE
+spell_slot ^=Magnavolt:gte
+spell_slot ^=Malign Gateway:G
 spell_slot ^=Manifold Assault:A
-spell_slot ^=Monstrous Menagerie:a
+spell_slot ^=Monstrous Menagerie:e
 spell_slot ^=Orb of Destruction:d
 spell_slot ^=Ozocubu's Refrigeration:zb
 spell_slot ^=Rimeblight:rt
@@ -541,21 +594,21 @@ spell_slot ^=Spellforged Servitor:a
 spell_slot ^=Summon Hydra:S
 
 spell_slot ^=Borgnjor's Revivification:a
-spell_slot ^=Discord:a
+spell_slot ^=Discord:Dd
 spell_slot ^=Disjunction:D
-spell_slot ^=Fulsome Fusillade:a
+spell_slot ^=Fulsome Fusillade:FE
 spell_slot ^=Ignition:gt
 spell_slot ^=Infestation:te
 spell_slot ^=Lehudib's Crystal Spear:dtec
 spell_slot ^=Maxwell's Capacitive Coupling:+C
-spell_slot ^=Summon Horrible Things:a
+spell_slot ^=Summon Horrible Things:S
 
-spell_slot ^=Chain Lightning:a
-spell_slot ^=Death's Door:a
-spell_slot ^=Dragon's Call:a
-spell_slot ^=Fire Storm:a
-spell_slot ^=Polar Vortex:a
-spell_slot ^=Shatter:a
+spell_slot ^=Chain Lightning:cg
+spell_slot ^=Death's Door:D
+spell_slot ^=Dragon's Call:DC
+spell_slot ^=Fire Storm:fetFET
+spell_slot ^=Polar Vortex:xX
+spell_slot ^=Shatter:ST
 ###############################################################################################
 ####################################### Ability slots #########################################
 ###############################################################################################
@@ -576,6 +629,7 @@ feature   += crystal wall               { , , green }
 feature   += unnaturally                { , , magenta }
 feature   += translucent unnaturally    { , , cyan }
 feature   += slime covered              { , , lightgreen}
+
 mon_glyph += warg                       : x045B
 mon_glyph += aizul                      : x015C
 mon_glyph += satyr                      : x010B
@@ -589,6 +643,7 @@ mon_glyph += jeremiah                   : x0424
 mon_glyph += nagaraja                   : x0147
 mon_glyph += scorpion                   : x015F
 mon_glyph += skyshark                   : x03DC
+mon_glyph += gargoyle                   : x018D
 mon_glyph += acid blob                  : yellow
 mon_glyph += ice devil                  : lightblue
 mon_glyph += ice fiend                  : lightblue
@@ -599,13 +654,16 @@ mon_glyph += marrowcuda                 : x03DC
 mon_glyph += orb spider                 : x015B
 mon_glyph += saint roka                 : x00F6
 mon_glyph += bound soul                 : x03A9 white
+mon_glyph += royal mummy                : lightblue
 mon_glyph += orc warlord                : x00F6
 mon_glyph += necromancer                : a
+mon_glyph += war gargoyle               : x018D
 mon_glyph += ancient lich               : yellow
 mon_glyph += orc sorcerer               : x00F6
 mon_glyph += shock serpent              : x015A
 mon_glyph += merfolk avatar             : x0271
 mon_glyph += dancing weapon             : x01AA
+mon_glyph += molten gargoyle            : x018D
 mon_glyph += centaur warrior            : x010B
 mon_glyph += demonic crawler            : x0161
 mon_glyph += orc high priest            : x00F6
@@ -622,6 +680,7 @@ mon_glyph += ironbound preserver        : a
 mon_glyph += deep elf annihilator       : x00EB
 mon_glyph += deep elf blademaster       : x00EB
 mon_glyph += deep elf death mage        : x00EB
+mon_glyph += quicksilver elemental      : x0112
 mon_glyph += deep elf demonologist      : x00EB
 mon_glyph += deep elf elementalist      : x00EB
 mon_glyph += deep elf high priest       : x00EB
@@ -630,6 +689,41 @@ mon_glyph += elemental wellspring       : x04A8 white
 mon_glyph += merged slime creature      : x0132
 mon_glyph += deep elf master archer     : x00EB brown
 mon_glyph += alligator snapping turtle  : x0167
+
+item_glyph += darts?                    : `
+item_glyph += poisoned                  : green
+item_glyph += curare                    : cyan
+item_glyph += atropa                    : yellow
+item_glyph += datura                    : lightred
+item_glyph += dispersal                 : magenta
+
+item_glyph += stones?                   : x037D
+item_glyph += boomerangs?               : x037D
+item_glyph += large rocks?              : x037D
+item_glyph += throwing nets?            : x037D
+
+item_glyph += javelins?                 : x2197
+item_glyph += (.*[^r] javelins?)        : brown
+item_glyph += silver javelins?          : white
+
+item_glyph += wand of digging           : brown
+item_glyph += wand of acid              : yellow
+item_glyph += wand of light             : yellow
+item_glyph += wand of quicksilver       : yellow
+item_glyph += wand of charming          : green
+item_glyph += wand of paralysis         : green
+item_glyph += wand of iceblast          : magenta
+item_glyph += wand of roots             : magenta
+item_glyph += wand of warping           : magenta
+item_glyph += wand of mindburst         : cyan
+item_glyph += wand of polymorph         : white
+item_glyph += wand of flame             : lightred
+item_glyph += unidentified.*(wand)      : blue
+
+item_glyph += helmet                    : x00A2
+item_glyph += shield                    : x0298
+item_glyph += gloves                    : x00A5
+item_glyph += boots                     : x00A3
 ###############################################################################################
 ################################### Extended monster info #####################################
 ###############################################################################################
@@ -943,10 +1037,4 @@ mon_glyph += alligator snapping turtle  : x0167
     end
   end
 }
-
-macros+= M \{F2} ===fPrintAllMonsInfo
-macros+= M \{F3} F*
-macros+= M \{F4} w*
-macros+= M \{F5} Q*
-macros+= M < ===safe_upstairs
 ###############################################################################################
