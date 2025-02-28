@@ -4,8 +4,8 @@
 #todo: spell failure calcs
 #https://doc.dcss.io
 
-: gVersion = "0.32"
-: gRcRevision = "10"
+: gVersion = "0.33"
+: gRcRevision = "11"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -137,7 +137,7 @@
       crawl.setopt("autoinscribe += potions? of mutation:!q")
       crawl.setopt("autoinscribe += potions? of ambrosia:!q")
       crawl.setopt("autoinscribe += potions? of berserk rage:!q")
-      crawl.setopt("autoinscribe += potions? of degeneration:!q")
+      crawl.setopt("autoinscribe += potions? of moonshine:!q")
 
       crawl.setopt("autoinscribe += scrolls? of acquirement:!r")
       crawl.setopt("autoinscribe += scrolls? of butterflies:!r")
@@ -262,7 +262,7 @@
   end
 
   function fSmartUnusual()
-    local lDefaultUnusual = "wand,disto,chaos,curare,atropa,dispersal,throwing net,resistance"
+    local lDefaultUnusual = "wand,disto,chaos,curare,atropa,disjunction,throwing net,resistance"
     crawl.setopt("unusual_monster_items = " .. lDefaultUnusual)
     if you.res_poison() <= 0 then
       crawl.setopt("unusual_monster_items += " .. "venom")
@@ -279,11 +279,12 @@
     if you.res_shock() <= 0 then
       crawl.setopt("unusual_monster_items += " .. "electrocution")
     end
-    if you.race() == "Ghoul" or you.race() == "Mummy" or you.race() == "Demonspawn" or you.race() == "Vampire" or
+    if you.race() == "Revenant" or you.race() == "Mummy" or you.race() == "Demonspawn" or you.race() == "Poltergeist" or
       you.transform() == "death" or you.transform() == "bat" then
         crawl.setopt("unusual_monster_items += " .. "holy")
     end
-    if you.race() ~= "Ghoul" and you.race() ~= "Mummy" and you.race() ~= "Formicid" and you.transform() ~= "death" then
+    if you.race() ~= "Revenant" and you.race() ~= "Mummy" and you.race() ~= "Poltergeist" and you.race() ~= "Formicid"
+      and you.transform() ~= "death" then
       crawl.setopt("unusual_monster_items += " .. "datura")
     end
   end
@@ -367,7 +368,7 @@ autoinscribe += boomerangs?:@Q2
 autoinscribe += (.*[^r] javelins?):@Q3
 autoinscribe += silver javelins?:@Q4
 autoinscribe += throwing nets?:@f2
-autoinscribe += dispersal:@f3
+autoinscribe += disjunction:@f3
 autoinscribe += large rocks?:@f4
 autoinscribe += ring of:@P
 ###############################################################################################
@@ -406,7 +407,6 @@ end
   if gPreset == "TurnCount" then
     crawl.setopt("macros+= M \{F1} zG")
     crawl.setopt("macros+= M \{F3} F*")
-    crawl.setopt("macros+= M \{F4} w*")
   end
 
   if gPreset ~= "RealTime" then
@@ -435,7 +435,7 @@ item_slot ^= potion of enlightenment:t
 item_slot ^= potion of lignification:u
 item_slot ^= potion of ambrosia:x
 item_slot ^= potion of mutation:y
-item_slot ^= potion of degeneration:z
+item_slot ^= potion of moonshine:z
 
 item_slot ^= scroll of identify:H
 item_slot ^= scroll of acquirement:I
@@ -479,7 +479,7 @@ item_slot ^= box of beasts:d
 item_slot ^= sack of spiders:d
 
 item_slot ^= (dagger|short sword|rapier|quick blade|staff of|quarterstaff|lajatang|whip|mace|flail|morningstar):-wqer
-item_slot ^= (eveningstar|demon whip|hand axe|war axe|broad axe|spear|trident|demon trident|long sword|falchion):-wqer
+item_slot ^= (eveningstar|demon whip|hand axe|war axe|broad axe|spear|trident|demon trident|partisan|long sword|falchion):-wqer
 item_slot ^= (scimitar|demon blade|double sword|sacred scourge|trishula|eudemon blade|sling|shortbow):-wqer
 ###############################################################################################
 ######################################## Spell slots  #########################################
@@ -487,23 +487,25 @@ item_slot ^= (scimitar|demon blade|double sword|sacred scourge|trishula|eudemon 
 spell_slot ^= Apportation:a
 spell_slot ^= Foxfire:fx
 spell_slot ^= Freeze:fz
+spell_slot ^= Kinetic Graphnel:t
 spell_slot ^= Kiss of Death:d
 spell_slot ^= Magic Dart:d
+spell_slot ^= Poisonous Vapours:vV
 spell_slot ^= Sandblast:st
 spell_slot ^= Shock:s
 spell_slot ^= Slow:sw
 spell_slot ^= Soul Splinter:st
-spell_slot ^= Sting:gts
 spell_slot ^= Summon Small Mammal:sa
 
 spell_slot ^= Blink:+B
 spell_slot ^= Call Imp:bcC
+spell_slot ^= Construct Spike Launcher:sS
 spell_slot ^= Ensorcelled Hibernation:eE
 spell_slot ^= Grave Claw:gc
 spell_slot ^= Jinxbite:xt
 spell_slot ^= Lesser Beckoning:+q
-spell_slot ^= Mercury Vapours:vVcC
 spell_slot ^= Momentum Strike:st
+spell_slot ^= Mercury Arrow:rwWeER
 spell_slot ^= Scorch:sc
 spell_slot ^= Searing Ray:srg
 spell_slot ^= Static Discharge:sdSD
@@ -516,6 +518,7 @@ spell_slot ^= Frozen Ramparts:Rfrt
 spell_slot ^= Fugue of the Fallen:Ffe
 spell_slot ^= Hailstorm:tsT
 spell_slot ^= Inner Flame:fFeE
+spell_slot ^= Launch Clockwork Bee:bceBCE
 spell_slot ^= Maxwell's Portable Piledriver:tT
 spell_slot ^= Mephitic Cloud:+c
 spell_slot ^= Ozocubu's Armour:bzZ
@@ -531,28 +534,33 @@ spell_slot ^= Volatile Blastmotes:vbVB
 
 spell_slot ^=Airstrike:a
 spell_slot ^=Anguish:a
-spell_slot ^=Animate Armour:a
 spell_slot ^=Animate Dead:D
+spell_slot ^=Awaken Armour:a
 spell_slot ^=Brom's Barrelling Boulder:be
 spell_slot ^=Cause Fear:cfF
 spell_slot ^=Cigotuvi's Putrefaction:a
 spell_slot ^=Dimensional Bullseye:a
 spell_slot ^=Dispel Undead:de
+spell_slot ^=Eringya's Surprising Crocodile:CS
 spell_slot ^=Flame Wave:efEF
+spell_slot ^=Forge Blazeheart Golem:G
+spell_slot ^=Forge Lightning Spire:G
 spell_slot ^=Fulminant Prism:t
 spell_slot ^=Ignite Poison:gG
+spell_slot ^=Iskenderun's Battlesphere:b
 spell_slot ^=Iskenderun's Mystic Blast:T
 spell_slot ^=Leda's Liquefaction:d
 spell_slot ^=Martyr's Knell:eE
 spell_slot ^=Olgreb's Toxic Radiance:RT
 spell_slot ^=Passage of Golubria:+G
 spell_slot ^=Petrify:t
+spell_slot ^=Rending Blade:RBE
 spell_slot ^=Sticky Flame:ct
-spell_slot ^=Summon Blazeheart Golem:G
-spell_slot ^=Summon Lightning Spire:G
+Summon Seismosaurus Egg
 spell_slot ^=Vhi's Electric Charge:+v
 
 spell_slot ^=Alistair's Intoxication:a
+spell_slot ^=Alistair's Walking Alembic:aW
 spell_slot ^=Arcjolt:a
 spell_slot ^=Borgnjor's Vile Clutch:vV
 spell_slot ^=Curse of Agony:a
@@ -560,9 +568,9 @@ spell_slot ^=Fireball:f
 spell_slot ^=Freezing Cloud:fc
 spell_slot ^=Hoarfrost Cannonade:F
 spell_slot ^=Irradiate:RrEe
-spell_slot ^=Iskenderun's Battlesphere:b
 spell_slot ^=Lee's Rapid Deconstruction:dr
 spell_slot ^=Metabolic Englaciation:a
+spell_slot ^=Nazja's Percussive Tempering:T
 spell_slot ^=Silence:a
 spell_slot ^=Summon Forest:F
 spell_slot ^=Summon Mana Viper:V
@@ -573,6 +581,9 @@ spell_slot ^=Conjure Ball Lightning:cb
 spell_slot ^=Death Channel:C
 spell_slot ^=Dispersal:dD
 spell_slot ^=Eringya's Noxious Bog:x
+spell_slot ^=Forge Monarch Bomb:B
+spell_slot ^=Forge Phalanx Beetle:BxX
+spell_slot ^=Fortress Blast:FB
 spell_slot ^=Gell's Gavotte:g
 spell_slot ^=Permafrost Eruption:te
 spell_slot ^=Plasma Beam:e
@@ -580,6 +591,7 @@ spell_slot ^=Sculpt Simulacrum:sS
 spell_slot ^=Starburst:sb
 spell_slot ^=Summon Cactus Giant:C
 
+spell_slot ^=Diamond Sawblades:DSs
 spell_slot ^=Enfeeble:eEfF
 spell_slot ^=Haunt:tT
 spell_slot ^=Hellfire Mortar:eE
@@ -590,7 +602,8 @@ spell_slot ^=Monstrous Menagerie:e
 spell_slot ^=Orb of Destruction:d
 spell_slot ^=Ozocubu's Refrigeration:zb
 spell_slot ^=Rimeblight:rt
-spell_slot ^=Spellforged Servitor:a
+spell_slot ^=Spellspark Servitor:a
+spell_slot ^=Splinterfrost Shell:SE
 spell_slot ^=Summon Hydra:S
 
 spell_slot ^=Borgnjor's Revivification:a
@@ -607,6 +620,7 @@ spell_slot ^=Chain Lightning:cg
 spell_slot ^=Death's Door:D
 spell_slot ^=Dragon's Call:DC
 spell_slot ^=Fire Storm:fetFET
+spell_slot ^=Platinum Paragon:GT
 spell_slot ^=Polar Vortex:xX
 spell_slot ^=Shatter:ST
 ###############################################################################################
@@ -646,6 +660,7 @@ mon_glyph += skyshark                   : x03DC
 mon_glyph += gargoyle                   : x018D
 mon_glyph += acid blob                  : yellow
 mon_glyph += ice devil                  : lightblue
+mon_glyph += wind drake                 : cyan
 mon_glyph += ice fiend                  : lightblue
 mon_glyph += occultist                  : a
 mon_glyph += blink frog                 : lightmagenta
@@ -663,6 +678,8 @@ mon_glyph += orc sorcerer               : x00F6
 mon_glyph += shock serpent              : x015A
 mon_glyph += merfolk avatar             : x0271
 mon_glyph += dancing weapon             : x01AA
+mon_glyph += sphinx marauder            : white
+mon_glyph += guardian sphinx            : x0124
 mon_glyph += molten gargoyle            : x018D
 mon_glyph += centaur warrior            : x010B
 mon_glyph += demonic crawler            : x0161
@@ -676,16 +693,17 @@ mon_glyph += deep elf sorcerer          : x00EB
 mon_glyph += salamander tyrant          : x0147
 mon_glyph += quicksilver dragon         : x04A8
 mon_glyph += ironbound convoker         : a
+mon_glyph += vampire bloodprince        : white
 mon_glyph += ironbound preserver        : a
+mon_glyph += deep elf death mage        : x00EB
 mon_glyph += deep elf annihilator       : x00EB
 mon_glyph += deep elf blademaster       : x00EB
-mon_glyph += deep elf death mage        : x00EB
+mon_glyph += deep elf high priest       : x00EB
+mon_glyph += elemental wellspring       : x04A8 white
+mon_glyph += ironbound frostheart       : a
 mon_glyph += quicksilver elemental      : x0112
 mon_glyph += deep elf demonologist      : x00EB
 mon_glyph += deep elf elementalist      : x00EB
-mon_glyph += deep elf high priest       : x00EB
-mon_glyph += ironbound frostheart       : a
-mon_glyph += elemental wellspring       : x04A8 white
 mon_glyph += merged slime creature      : x0132
 mon_glyph += deep elf master archer     : x00EB brown
 mon_glyph += alligator snapping turtle  : x0167
@@ -695,7 +713,7 @@ item_glyph += poisoned                  : green
 item_glyph += curare                    : cyan
 item_glyph += atropa                    : yellow
 item_glyph += datura                    : lightred
-item_glyph += dispersal                 : magenta
+item_glyph += disjunction               : magenta
 
 item_glyph += stones?                   : x037D
 item_glyph += boomerangs?               : x037D
@@ -740,7 +758,6 @@ item_glyph += boots                     : x00A3
     ["Felid"] = -1,
     ["Formicid"] = 1,
     ["Gargoyle"] = 0,
-    ["Ghoul"] = 0,
     ["Gnoll"] = 0,
     ["Human"] = 0,
     ["Kobold"] = 1,
@@ -751,10 +768,11 @@ item_glyph += boots                     : x00A3
     ["Naga"] = 0,
     ["Octopode"] = 0,
     ["Oni"] = 0,
+    ["Poltergeist"] = -1,
+    ["Revenant"] = 0,
     ["Spriggan"] = -1,
     ["Tengu"] = 0,
     ["Troll"] = -1,
-    ["Vampire"] = -1,
     ["Vine Stalker"] = 0,
   } --
 
@@ -770,7 +788,6 @@ item_glyph += boots                     : x00A3
     ["Felid"] = 1.414,
     ["Formicid"] = 1,
     ["Gargoyle"] = 1.1892,
-    ["Ghoul"] = 1.1892,
     ["Gnoll"] = 1.1892,
     ["Human"] = 1.1892,
     ["Kobold"] = 1,
@@ -781,10 +798,11 @@ item_glyph += boots                     : x00A3
     ["Naga"] = 1.1892,
     ["Octopode"] = 1.1892,
     ["Oni"] = 1.1892,
+    ["Poltergeist"] = 1.414,
+    ["Revenant"] = 1.1892,
     ["Spriggan"] = 1.414,
     ["Tengu"] = 1.1892,
     ["Troll"] = 1.414,
-    ["Vampire"] = 1.414,
     ["Vine Stalker"] = 1.1892,
   } --
 
