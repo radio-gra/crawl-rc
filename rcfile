@@ -5,7 +5,7 @@
 #https://doc.dcss.io
 
 : gVersion = "0.33"
-: gRcRevision = "11"
+: gRcRevision = "12"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -13,6 +13,7 @@
 : gInitCompleted = false
 : gRuntimeChecks = {}
 : gIsSafeMove = false
+: gIsFreeAutofight = false
 
 {
   gPresetConfig = {
@@ -115,6 +116,25 @@
       crawl.mpr("<green>Safe move is ON</green>")
     else
       crawl.mpr("<red>Safe move is OFF</red>")
+    end
+  end
+
+  function fSetFreeAutofight(enable)
+    if enable then
+      crawl.setopt("autofight_stop = 0")
+    else
+      local lCfgValue = "cfg" .. gPreset
+      crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
+    end
+  end
+
+  function fToggleFreeAutofight()
+    gIsFreeAutofight = not gIsFreeAutofight
+    fSetFreeAutofight(gIsFreeAutofight)
+    if gIsFreeAutofight then
+      crawl.mpr("<red>Free autofight is ON</red>")
+    else
+      crawl.mpr("<green>Free autofight is OFF</green>")
     end
   end
 
@@ -332,7 +352,7 @@ monster_item_view_coordinates = false
 auto_hide_spells=true
 skill_focus = false
 show_more = false
-dump_message_count = 50
+dump_message_count = 100
 travel_delay = -1
 show_travel_trail = true
 fire_order = launcher, inscribed, throwing, evokable, spell
@@ -386,6 +406,7 @@ force_more_message += the power ruling this place vanishes
 force_more_message += you are being watched by something
 force_more_message += Jiyva alters your
 force_more_message += Safe move is OFF
+force_more_message += Free autofight is ON
 force_more_message += Your transformation is almost over
 force_more_message += less wooden
 
@@ -414,6 +435,7 @@ end
   end
 }
 macros+= M \{F2} ===fPrintAllMonsInfo
+macros+= M \{F4} ===fToggleFreeAutofight
 macros+= M \{F5} Q*
 macros+= M 0 ===fToggleSafeMove
 ###############################################################################################
@@ -487,7 +509,7 @@ item_slot ^= (scimitar|demon blade|double sword|sacred scourge|trishula|eudemon 
 spell_slot ^= Apportation:a
 spell_slot ^= Foxfire:fx
 spell_slot ^= Freeze:fz
-spell_slot ^= Kinetic Graphnel:t
+spell_slot ^= Kinetic Grapnel:t
 spell_slot ^= Kiss of Death:d
 spell_slot ^= Magic Dart:d
 spell_slot ^= Poisonous Vapours:vV
@@ -643,6 +665,7 @@ feature   += crystal wall               { , , green }
 feature   += unnaturally                { , , magenta }
 feature   += translucent unnaturally    { , , cyan }
 feature   += slime covered              { , , lightgreen}
+feature   += spike launcher             { x2350, red, red, red}
 
 mon_glyph += warg                       : x045B
 mon_glyph += aizul                      : x015C
@@ -687,6 +710,7 @@ mon_glyph += orc high priest            : x00F6
 mon_glyph += the royal jelly            : x053A
 mon_glyph += very ugly thing            : x00FC
 mon_glyph += yaktaur captain            : x010B
+mon_glyph += diamond sawblade           : x2055
 mon_glyph += emperor scorpion           : x015F
 mon_glyph += guardian serpent           : x015C
 mon_glyph += deep elf sorcerer          : x00EB
@@ -708,7 +732,7 @@ mon_glyph += merged slime creature      : x0132
 mon_glyph += deep elf master archer     : x00EB brown
 mon_glyph += alligator snapping turtle  : x0167
 
-item_glyph += darts?                    : `
+item_glyph += darts?                    : x2301
 item_glyph += poisoned                  : green
 item_glyph += curare                    : cyan
 item_glyph += atropa                    : yellow
@@ -742,6 +766,10 @@ item_glyph += helmet                    : x00A2
 item_glyph += shield                    : x0298
 item_glyph += gloves                    : x00A5
 item_glyph += boots                     : x00A3
+
+item_glyph -= dart slug corpse
+item_glyph += useless_item.*(large rocks?) : x037D darkgray
+item_glyph -= tin of tremorstones
 ###############################################################################################
 ################################### Extended monster info #####################################
 ###############################################################################################
