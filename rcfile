@@ -5,7 +5,7 @@
 #https://doc.dcss.io
 
 : gVersion = "0.33"
-: gRcRevision = "12"
+: gRcRevision = "13"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -321,6 +321,28 @@
     end
   end
 
+  function c_message(text, channel)
+   local function hrs()
+      local res = math.floor(you.real_time() / 3600)
+      return res >= 10 and "" .. res or "0" .. res
+    end
+
+    local function mins()
+      local res = math.floor(math.fmod(you.real_time(), 3600) / 60)
+      return res >= 10 and "" .. res or "0" .. res
+    end
+
+    local function secs()
+      local res = math.fmod(you.real_time(), 60)
+      return res >= 10 and "" .. res or "0" .. res
+    end
+
+    if text:find("Welcome to") or text:find("feel its power") then
+      crawl.take_note("Time: " .. hrs() .. "h " .. mins() .. "m " .. secs() .. "s")
+    end
+  end
+
+
   function fRunChecks()
     util.foreach(gRuntimeChecks, function(fname) _G[fname]() end)
   end
@@ -409,6 +431,7 @@ force_more_message += Safe move is OFF
 force_more_message += Free autofight is ON
 force_more_message += Your transformation is almost over
 force_more_message += less wooden
+force_more_message += You fail to use
 
 flash_screen_message += the power ruling this place vanishes
 flash_screen_message += you feel your power leaking away
@@ -656,6 +679,10 @@ ability_slot ^=Draw Stack:r
 ####################################### Glyphs & colors #######################################
 ###############################################################################################
 feature   += Zot trap                   { x2040, red, red, red}
+feature   += archmage's trap            { x2040, magenta, magenta, magenta}
+feature   += tyrant's trap              { x2040, cyan, cyan, cyan}
+feature   += devourer's trap            { x2040, yellow, yellow, yellow}
+feature   += harlequin's                { x2040, green, green, green}
 feature   += rock wall                  { , , brown }
 feature   += translucent rock wall      { , , yellow }
 feature   += stone wall                 { , , white }
@@ -767,9 +794,11 @@ item_glyph += shield                    : x0298
 item_glyph += gloves                    : x00A5
 item_glyph += boots                     : x00A3
 
-item_glyph -= dart slug corpse
+item_glyph += corpse                    : †
+item_glyph += tin of tremorstones       : }
+item_glyph += moonstone                 : =
+item_glyph += soapstone                 : "
 item_glyph += useless_item.*(large rocks?) : x037D darkgray
-item_glyph -= tin of tremorstones
 ###############################################################################################
 ################################### Extended monster info #####################################
 ###############################################################################################
