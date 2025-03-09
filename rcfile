@@ -1,15 +1,10 @@
-#todo: custom variable configs, extending the presets e.g. "cfg_RT_MiFi01"
-#todo: preset-dependent force_more
-#todo: preset-dependent glyphs
-#todo: spell failure calcs
-#https://doc.dcss.io
-
 : gVersion = "0.33"
-: gRcRevision = "13"
+: gRcRevision = "14"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
 #: gPreset = "TurnCount"
+: gCurrentConfig = {}
 : gInitCompleted = false
 : gRuntimeChecks = {}
 : gIsSafeMove = false
@@ -26,6 +21,7 @@
       defaultAutopickup = "true",
       fewerAnimations = false,
       fewerTravelInterrupts = true,
+      forceMores = "normal",
       gems = true,
       hpWarning = 33,
       safeConsumables = false,
@@ -43,6 +39,7 @@
       defaultAutopickup = "true",
       fewerAnimations = false,
       fewerTravelInterrupts = false,
+      forceMores = "harsh",
       gems = false,
       hpWarning = 50,
       safeConsumables = true,
@@ -60,6 +57,7 @@
       defaultAutopickup = "true",
       fewerAnimations = true,
       fewerTravelInterrupts = true,
+      forceMores = "lax",
       gems = false,
       hpWarning = 33,
       safeConsumables = false,
@@ -77,6 +75,7 @@
       defaultAutopickup = "false",
       fewerAnimations = false,
       fewerTravelInterrupts = false,
+      forceMores = "harsh",
       gems = true,
       hpWarning = 33,
       safeConsumables = true,
@@ -123,8 +122,7 @@
     if enable then
       crawl.setopt("autofight_stop = 0")
     else
-      local lCfgValue = "cfg" .. gPreset
-      crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
+      crawl.setopt("autofight_stop = " .. gCurrentConfig.autofightStop)
     end
   end
 
@@ -173,39 +171,41 @@
   end
 
   function fApplyPreset(preset)
-    local lCfgValue = "cfg" .. preset
+    gCurrentConfig = gPresetConfig["cfg" .. preset];
 
-    if gPresetConfig[lCfgValue].allowRest then
+    if gCurrentConfig.allowRest then
     else
       crawl.setopt("bindkey = [5] CMD_NO_CMD_DEFAULT")
       crawl.setopt("bindkey = [NP5] CMD_NO_CMD_DEFAULT")
     end
 
-    if gPresetConfig[lCfgValue].allowAutoExplore then
+    if gCurrentConfig.allowAutoExplore then
       crawl.setopt("bindkey = [`] CMD_EXPLORE")
     else
       crawl.setopt("bindkey = [`] CMD_NO_CMD_DEFAULT")
     end
 
-    crawl.setopt("autofight_stop = " .. gPresetConfig[lCfgValue].autofightStop)
-    crawl.setopt("autopickup = " .. gPresetConfig[lCfgValue].autopickupString)
+    crawl.setopt("autofight_stop = " .. gCurrentConfig.autofightStop)
+    crawl.setopt("autopickup = " .. gCurrentConfig.autopickupString)
 
-    if gPresetConfig[lCfgValue].avoidShallow then
+    if gCurrentConfig.avoidShallow then
       table.insert(gRuntimeChecks, "fCheckAvoidShallow")
     end
 
-    crawl.setopt("default_autopickup = " .. gPresetConfig[lCfgValue].defaultAutopickup)
+    crawl.setopt("default_autopickup = " .. gCurrentConfig.defaultAutopickup)
 
-    if gPresetConfig[lCfgValue].fewerAnimations then
+    if gCurrentConfig.fewerAnimations then
       crawl.setopt("use_animations -= beam, player")
     end
 
-    if gPresetConfig[lCfgValue].fewerTravelInterrupts then
+    if gCurrentConfig.fewerTravelInterrupts then
       crawl.setopt("interrupt_travel -= sense_monster")
       crawl.setopt("interrupt_travel -= ancestor_hp")
     end
 
-    if gPresetConfig[lCfgValue].gems then
+    fSetForceMores(gCurrentConfig.forceMores)
+
+    if gCurrentConfig.gems then
       crawl.setopt("always_show_gems = true")
       crawl.setopt("more_gem_info = true")
     else
@@ -213,15 +213,15 @@
       crawl.setopt("more_gem_info = false")
     end
 
-    crawl.setopt("hp_warning = " .. gPresetConfig[lCfgValue].hpWarning)
-    crawl.setopt("travel_open_doors = " .. gPresetConfig[lCfgValue].travelOpenDoors)
-    fSetSafeConsumables(gPresetConfig[lCfgValue].safeConsumables)
+    crawl.setopt("hp_warning = " .. gCurrentConfig.hpWarning)
+    crawl.setopt("travel_open_doors = " .. gCurrentConfig.travelOpenDoors)
+    fSetSafeConsumables(gCurrentConfig.safeConsumables)
 
-    gIsSafeMove = gPresetConfig[lCfgValue].safeMove
+    gIsSafeMove = gCurrentConfig.safeMove
     fSetSafeMove(gIsSafeMove)
 
-    crawl.setopt("show_game_time = " .. gPresetConfig[lCfgValue].showGameTime)
-    crawl.setopt("warn_hatches = " .. gPresetConfig[lCfgValue].warnHatches)
+    crawl.setopt("show_game_time = " .. gCurrentConfig.showGameTime)
+    crawl.setopt("warn_hatches = " .. gCurrentConfig.warnHatches)
   end
 
   function fStartOpenSkillMenu()
@@ -337,7 +337,7 @@
       return res >= 10 and "" .. res or "0" .. res
     end
 
-    if text:find("Welcome to") or text:find("feel its power") then
+    if text:find("Welcome to") or text:find("feel its power") or text:find("are not amused") then
       crawl.take_note("Time: " .. hrs() .. "h " .. mins() .. "m " .. secs() .. "s")
     end
   end
@@ -416,22 +416,45 @@ autoinscribe += ring of:@P
 ###############################################################################################
 ################################### Force mores & flashes #####################################
 ###############################################################################################
-force_more_message += malevolent force
-force_more_message += mastered
-force_more_message += You have finished your manual
-force_more_message += you miscast
-force_more_message += channel is weakening
-force_more_message += reaping aura is weakening
-force_more_message += grants you
-force_more_message += you have drawn
-force_more_message += the power ruling this place vanishes
-force_more_message += you are being watched by something
-force_more_message += Jiyva alters your
-force_more_message += Safe move is OFF
-force_more_message += Free autofight is ON
-force_more_message += Your transformation is almost over
-force_more_message += less wooden
-force_more_message += You fail to use
+{
+  function fApplyLaxForceMores()
+    crawl.setopt("force_more_message += malevolent force")
+    crawl.setopt("force_more_message += You fail to use")
+    crawl.setopt("force_more_message += you miscast")
+  end
+
+  function fApplyNormalForceMores()
+    crawl.setopt("force_more_message += mastered")
+    crawl.setopt("force_more_message += You have finished your manual")
+    crawl.setopt("force_more_message += grants you")
+    crawl.setopt("force_more_message += you have drawn")
+    crawl.setopt("force_more_message += the power ruling this place vanishes")
+    crawl.setopt("force_more_message += Jiyva alters your")
+    crawl.setopt("force_more_message += Safe move is OFF")
+    crawl.setopt("force_more_message += Free autofight is ON")
+  end
+
+  function fApplyHarshForceMores()
+    crawl.setopt("force_more_message += channel is weakening")
+    crawl.setopt("force_more_message += reaping aura is weakening")
+    crawl.setopt("force_more_message += you are being watched by something")
+    crawl.setopt("force_more_message += Your transformation is almost over")
+    crawl.setopt("force_more_message += less wooden")
+  end
+
+  function fSetForceMores(setting)
+    fApplyLaxForceMores()
+
+    if setting == "normal" then
+      fApplyNormalForceMores()
+    end
+
+    if setting == "harsh" then
+      fApplyNormalForceMores()
+      fApplyHarshForceMores()
+    end
+  end
+}
 
 flash_screen_message += the power ruling this place vanishes
 flash_screen_message += you feel your power leaking away
@@ -799,6 +822,39 @@ item_glyph += tin of tremorstones       : }
 item_glyph += moonstone                 : =
 item_glyph += soapstone                 : "
 item_glyph += useless_item.*(large rocks?) : x037D darkgray
+
+# calling this from fOnInit doesn't work for item_glyphs for whatever reason, have to call here
+:fsetCustomGlyphs()
+{
+  function fSetCustomGlyphs()
+    if gPreset == "RealTime" then
+     crawl.setopt("item_glyph += chain mail : x03A0 darkgray")
+     crawl.setopt("item_glyph += plate armour : x03A0 white")
+     crawl.setopt("item_glyph += crystal plate : x03A0 cyan")
+     crawl.setopt("item_glyph += storm dragon scales : x03A0 magenta")
+     crawl.setopt("item_glyph += swamp dragon scales : x03A0 green")
+     crawl.setopt("item_glyph += golden dragon scales : x03A0 yellow")
+     crawl.setopt("item_glyph += fire dragon scales : x03A0 lightred")
+     crawl.setopt("item_glyph += pearl dragon scales : x03A0 magenta")
+     crawl.setopt("item_glyph += quicksilver dragon scales : x03A0 lightgreen")
+
+     crawl.setopt("item_glyph += war axe : x03C1 darkgray")
+     crawl.setopt("item_glyph += broad axe : x03C1 white")
+     crawl.setopt("item_glyph += (ego|artifact).*(war axe|broad axe) : x03C1 green")
+     crawl.setopt("item_glyph += kite shield : x0298 white")
+     crawl.setopt("item_glyph += tower shield : x039e white")
+
+     crawl.setopt("item_glyph += helmet : [ darkgray")
+     crawl.setopt("item_glyph += buckler : [ darkgray")
+
+     crawl.setopt("menu_colour ^= green:amulet of regeneration")
+     crawl.setopt("menu_colour ^= green:amulet of reflection")
+     crawl.setopt("menu_colour ^= green:enchant armour")
+     crawl.setopt("menu_colour ^= green:enchant weapon")
+     crawl.setopt("menu_colour ^= lightred:equipped")
+    end
+  end
+}
 ###############################################################################################
 ################################### Extended monster info #####################################
 ###############################################################################################
