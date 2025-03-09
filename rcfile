@@ -1,5 +1,5 @@
 : gVersion = "0.33"
-: gRcRevision = "14"
+: gRcRevision = "15"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -824,7 +824,7 @@ item_glyph += soapstone                 : "
 item_glyph += useless_item.*(large rocks?) : x037D darkgray
 
 # calling this from fOnInit doesn't work for item_glyphs for whatever reason, have to call here
-:fsetCustomGlyphs()
+:fSetCustomGlyphs()
 {
   function fSetCustomGlyphs()
     if gPreset == "RealTime" then
