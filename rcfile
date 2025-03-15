@@ -1,5 +1,5 @@
 : gVersion = "0.33"
-: gRcRevision = "15"
+: gRcRevision = "16"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -263,6 +263,7 @@
     else
       fPrintConfigInfo()
       fApplyPreset(gPreset)
+      fSetMacros()
       fStartOpenSkillMenu()
       table.insert(gRuntimeChecks, "fSmartUnusual")
       gInitCompleted = true
@@ -363,6 +364,7 @@ rest_wait_both = true
 rest_wait_ancestor = true
 equip_unequip = true
 easy_confirm = all
+autofight_caught = true
 fail_severity_to_confirm = -1
 fail_severity_to_quiver = 5
 enable_recast_spell = false
@@ -471,13 +473,15 @@ end
 ########################################### Macros ############################################
 ###############################################################################################
 {
-  if gPreset == "TurnCount" then
-    crawl.setopt("macros+= M \{F1} zG")
-    crawl.setopt("macros+= M \{F3} F*")
-  end
+  function fSetMacros()
+    if gPreset == "TurnCount" then
+      crawl.setopt("macros+= M \\{F1} zG")
+      crawl.setopt("macros+= M \\{F3} F*")
+    end
 
-  if gPreset ~= "RealTime" then
-    crawl.setopt("macros+= M < ===safe_upstairs")
+    if gPreset ~= "RealTime" then
+      crawl.setopt("macros+= M < ===safe_upstairs")
+    end
   end
 }
 macros+= M \{F2} ===fPrintAllMonsInfo
@@ -845,6 +849,7 @@ item_glyph += useless_item.*(large rocks?) : x037D darkgray
      crawl.setopt("item_glyph += tower shield : x039e white")
 
      crawl.setopt("item_glyph += helmet : [ darkgray")
+     crawl.setopt("item_glyph += hat : x00A2 magenta")
      crawl.setopt("item_glyph += buckler : [ darkgray")
 
      crawl.setopt("menu_colour ^= green:amulet of regeneration")
@@ -852,6 +857,14 @@ item_glyph += useless_item.*(large rocks?) : x037D darkgray
      crawl.setopt("menu_colour ^= green:enchant armour")
      crawl.setopt("menu_colour ^= green:enchant weapon")
      crawl.setopt("menu_colour ^= lightred:equipped")
+
+    -- move elsewhere or don't idc
+     crawl.setopt("autopickup_exceptions += >stone")
+     crawl.setopt("autopickup_exceptions += <curare")
+     crawl.setopt("autopickup_exceptions += >atropa")
+     crawl.setopt("autopickup_exceptions += >datura")
+     crawl.setopt("autopickup_exceptions += >amnesia")
+     crawl.setopt("autopickup_exceptions += >brilliance")
     end
   end
 }
