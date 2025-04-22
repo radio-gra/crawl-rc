@@ -1,5 +1,5 @@
 : gVersion = "0.33"
-: gRcRevision = "16"
+: gRcRevision = "17"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -399,9 +399,8 @@ force_spell_targeter += Permafrost Eruption
 autoinscribe += atropa:blind & confuse
 autoinscribe += curare:slow @f1
 autoinscribe += datura:frenzy
-autoinscribe += wand of iceblast:@v1
-autoinscribe += wand of roots:@v1
-autoinscribe += wand of warping:@v1
+autoinscribe += phial of floods:@v1
+autoinscribe += gell's gravitambourine:@v1
 autoinscribe += wand of acid:@v2
 autoinscribe += wand of light:@v2
 autoinscribe += wand of quicksilver:@v2
@@ -411,6 +410,7 @@ autoinscribe += poisoned darts?:@Q1
 autoinscribe += boomerangs?:@Q2
 autoinscribe += (.*[^r] javelins?):@Q3
 autoinscribe += silver javelins?:@Q4
+autoinscribe += stones?:@Q5
 autoinscribe += throwing nets?:@f2
 autoinscribe += disjunction:@f3
 autoinscribe += large rocks?:@f4
@@ -464,8 +464,9 @@ flash_screen_message += Jiyva alters your
 
 {
 function c_answer_prompt(prompt)
-  if prompt:find("near your battlesphere") or prompt:find("near your fire vort") then
-    return true
+  if prompt:find("near your battlesphere") or prompt:find("near your fire vort")
+    or prompt:find("near your spectral") or prompt:find("near your hellfire mortar") then
+      return true
   end
 end
 }
@@ -543,7 +544,8 @@ item_slot ^= wand of polymorph:E
 item_slot ^= wand of flame:F
 
 item_slot ^= lightning rod:G
-item_slot ^= phial of floods:G
+item_slot ^= phial of floods:a
+item_slot ^= gell's gravitambourine:a
 item_slot ^= tin of tremorstones:b
 item_slot ^= condenser vane:b
 item_slot ^= phantom mirror:c
@@ -577,7 +579,7 @@ spell_slot ^= Grave Claw:gc
 spell_slot ^= Jinxbite:xt
 spell_slot ^= Lesser Beckoning:+q
 spell_slot ^= Momentum Strike:st
-spell_slot ^= Mercury Arrow:rwWeER
+spell_slot ^= Mercury Arrow:wrWeER
 spell_slot ^= Scorch:sc
 spell_slot ^= Searing Ray:srg
 spell_slot ^= Static Discharge:sdSD
@@ -596,7 +598,7 @@ spell_slot ^= Mephitic Cloud:+c
 spell_slot ^= Ozocubu's Armour:bzZ
 spell_slot ^= Passwall:+w
 spell_slot ^= Sigil of Binding:sbgd
-spell_slot ^= Stone Arrow:srt
+spell_slot ^= Stone Arrow:rst
 spell_slot ^= Summon Ice Beast:sbSB
 spell_slot ^= Swiftness:SWws
 spell_slot ^= Teleport Other:etET
@@ -605,7 +607,7 @@ spell_slot ^= Vampiric Draining:vdVD
 spell_slot ^= Volatile Blastmotes:vbVB
 
 spell_slot ^=Airstrike:a
-spell_slot ^=Anguish:a
+spell_slot ^=Anguish:A
 spell_slot ^=Animate Dead:D
 spell_slot ^=Awaken Armour:a
 spell_slot ^=Brom's Barrelling Boulder:be
@@ -628,14 +630,15 @@ spell_slot ^=Passage of Golubria:+G
 spell_slot ^=Petrify:t
 spell_slot ^=Rending Blade:RBE
 spell_slot ^=Sticky Flame:ct
-Summon Seismosaurus Egg
+spell_slot ^=Summon Seismosaurus Egg:GgESe
 spell_slot ^=Vhi's Electric Charge:+v
 
 spell_slot ^=Alistair's Intoxication:a
 spell_slot ^=Alistair's Walking Alembic:aW
 spell_slot ^=Arcjolt:a
 spell_slot ^=Borgnjor's Vile Clutch:vV
-spell_slot ^=Curse of Agony:a
+spell_slot ^=Curse of Agony:A
+spell_slot ^=Detonation Catalyst:dDcCtT
 spell_slot ^=Fireball:f
 spell_slot ^=Freezing Cloud:fc
 spell_slot ^=Hoarfrost Cannonade:F
@@ -670,11 +673,11 @@ spell_slot ^=Hellfire Mortar:eE
 spell_slot ^=Magnavolt:gte
 spell_slot ^=Malign Gateway:G
 spell_slot ^=Manifold Assault:A
-spell_slot ^=Monstrous Menagerie:e
 spell_slot ^=Orb of Destruction:d
 spell_slot ^=Ozocubu's Refrigeration:zb
 spell_slot ^=Rimeblight:rt
 spell_slot ^=Spellspark Servitor:a
+spell_slot ^=Sphinx Sisters:e
 spell_slot ^=Splinterfrost Shell:SE
 spell_slot ^=Summon Hydra:S
 
@@ -720,6 +723,7 @@ feature   += unnaturally                { , , magenta }
 feature   += translucent unnaturally    { , , cyan }
 feature   += slime covered              { , , lightgreen}
 feature   += spike launcher             { x2350, red, red, red}
+feature   += passage of golubria        { x0472, green, green, green}
 
 mon_glyph += warg                       : x045B
 mon_glyph += aizul                      : x015C
