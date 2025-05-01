@@ -1,5 +1,5 @@
 : gVersion = "0.33"
-: gRcRevision = "17"
+: gRcRevision = "18"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -410,7 +410,7 @@ autoinscribe += poisoned darts?:@Q1
 autoinscribe += boomerangs?:@Q2
 autoinscribe += (.*[^r] javelins?):@Q3
 autoinscribe += silver javelins?:@Q4
-autoinscribe += stones?:@Q5
+autoinscribe += (.*[^f] stones?):@Q5
 autoinscribe += throwing nets?:@f2
 autoinscribe += disjunction:@f3
 autoinscribe += large rocks?:@f4
