@@ -1,5 +1,5 @@
 : gVersion = "0.33"
-: gRcRevision = "18"
+: gRcRevision = "19"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -35,7 +35,7 @@
       allowAutoExplore = true,
       autofightStop = 80,
       autopickupString = "$?!+(/}",
-      avoidShallow = true,
+      avoidShallow = false,
       defaultAutopickup = "true",
       fewerAnimations = false,
       fewerTravelInterrupts = false,
@@ -393,6 +393,10 @@ bindkey = [Ins] CMD_PREV_CMD_AGAIN
 ###############################################################################################
 force_spell_targeter += Iskenderun's Mystic Blast
 force_spell_targeter += Permafrost Eruption
+confirm_action += Silence
+confirm_action += Door
+confirm_action += Blink
+confirm_action += Evoke
 ###############################################################################################
 ######################################## Autoinscribe #########################################
 ###############################################################################################
@@ -415,6 +419,7 @@ autoinscribe += throwing nets?:@f2
 autoinscribe += disjunction:@f3
 autoinscribe += large rocks?:@f4
 autoinscribe += ring of:@P
+autoinscribe += ring ":@P
 ###############################################################################################
 ################################### Force mores & flashes #####################################
 ###############################################################################################
@@ -423,6 +428,7 @@ autoinscribe += ring of:@P
     crawl.setopt("force_more_message += malevolent force")
     crawl.setopt("force_more_message += You fail to use")
     crawl.setopt("force_more_message += you miscast")
+    crawl.setopt("force_more_message += You feel weirdly uncertain")
   end
 
   function fApplyNormalForceMores()
@@ -434,6 +440,8 @@ autoinscribe += ring of:@P
     crawl.setopt("force_more_message += Jiyva alters your")
     crawl.setopt("force_more_message += Safe move is OFF")
     crawl.setopt("force_more_message += Free autofight is ON")
+    crawl.setopt("force_more_message += revealing its core")
+    crawl.setopt("force_more_message += in your own hands")
   end
 
   function fApplyHarshForceMores()
@@ -442,6 +450,7 @@ autoinscribe += ring of:@P
     crawl.setopt("force_more_message += you are being watched by something")
     crawl.setopt("force_more_message += Your transformation is almost over")
     crawl.setopt("force_more_message += less wooden")
+    crawl.setopt("force_more_message += quickly running out")
   end
 
   function fSetForceMores(setting)
@@ -465,7 +474,9 @@ flash_screen_message += Jiyva alters your
 {
 function c_answer_prompt(prompt)
   if prompt:find("near your battlesphere") or prompt:find("near your fire vort")
-    or prompt:find("near your spectral") or prompt:find("near your hellfire mortar") then
+    or prompt:find("near your spectral") or prompt:find("near your hellfire mortar")
+    or prompt:find("near your spellspark servitor") or prompt:find("near your walking alembic")
+    or prompt:find("near your lightning spire") or prompt:find("near your phalanx beetle") then
       return true
   end
 end
