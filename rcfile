@@ -1,5 +1,5 @@
-: gVersion = "0.33"
-: gRcRevision = "19"
+: gVersion = "0.34"
+: gRcRevision = "20"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -310,6 +310,18 @@
     end
   end
 
+  function fSmartUnusual_draft()
+    local lDefaultUnusual = "disto,chaos,curare,atropa,disjunction,throwing net, reflect"
+    .. ", wand of (light|quicksilver|charming|paralysis|roots|warping|polymorph)"
+    .. ", wand of acid:21, wand of iceblast:18, wand of mindburst:18, wand of flame:9"
+    .. ", artefact"
+    .. ", vulnerable:venom:15, vulnerable:flaming, vulnerable:freezing, vulnerable:draining"
+    .. ", electrocution:12, vulnerable:holy_wrath:10"
+    .. ", datura"
+
+    crawl.setopt("unusual_monster_items = " .. lDefaultUnusual)
+  end
+
   function safe_upstairs()
     if you.branch() == "Gauntlet" or you.branch() == "Trove" then
        crawl.formatted_mpr("Really exit portal? (1 or y to confirm)", "prompt")
@@ -453,16 +465,28 @@ autoinscribe += ring ":@P
     crawl.setopt("force_more_message += quickly running out")
   end
 
+  function fApplyMonsAlert(mons)
+    crawl.setopt("monster_alert += " .. mons)
+  end
+
+  gLaxMonsAlerts = {"Erolcha"}
+  gNormalMonsAlerts = {"shining eye, eye of draining"}
+  gHarshMonsAlerts = {"uniques"}
+
   function fSetForceMores(setting)
     fApplyLaxForceMores()
+    crawl.setopt("monster_alert = ")
+    util.foreach(gLaxMonsAlerts, fApplyMonsAlert)
 
     if setting == "normal" then
       fApplyNormalForceMores()
+      util.foreach(gNormalMonsAlerts, fApplyMonsAlert)
     end
 
     if setting == "harsh" then
       fApplyNormalForceMores()
       fApplyHarshForceMores()
+      util.foreach(gHarshMonsAlerts, fApplyMonsAlert)
     end
   end
 }
@@ -503,69 +527,74 @@ macros+= M 0 ===fToggleSafeMove
 ###############################################################################################
 ######################################## Item sorting #########################################
 ###############################################################################################
-item_slot ^= potion of experience:f
-item_slot ^= potion of haste:g
-item_slot ^= potion of invisibility:h
-item_slot ^= potion of heal wounds:i
-item_slot ^= potion of curing:j
-item_slot ^= potion of berserk rage:k
-item_slot ^= potion of might:l
-item_slot ^= potion of attraction:m
-item_slot ^= potion of brilliance:n
-item_slot ^= potion of magic:o
-item_slot ^= potion of cancellation:p
-item_slot ^= potion of resistance:s
-item_slot ^= potion of enlightenment:t
-item_slot ^= potion of lignification:u
-item_slot ^= potion of ambrosia:x
-item_slot ^= potion of mutation:y
-item_slot ^= potion of moonshine:z
+sort_menus = false
+show_paged_inventory = true
 
-item_slot ^= scroll of identify:H
-item_slot ^= scroll of acquirement:I
-item_slot ^= scroll of blink:J
-item_slot ^= scroll of butterflies:K
-item_slot ^= scroll of teleportation:L
-item_slot ^= scroll of fear:M
-item_slot ^= scroll of fog:N
-item_slot ^= scroll of summoning:O
-item_slot ^= scroll of silence:P
-item_slot ^= scroll of vulnerability:Q
-item_slot ^= scroll of torment:R
-item_slot ^= scroll of poison:S
-item_slot ^= scroll of immolation:T
-item_slot ^= scroll of revelation:U
-item_slot ^= scroll of noise:V
-item_slot ^= scroll of brand weapon:W
-item_slot ^= scroll of enchant weapon:X
-item_slot ^= scroll of enchant armour:Y
-item_slot ^= scroll of amnesia:Z
+consumable_shortcut =
+consumable_shortcut ^= potion of experience:f
+consumable_shortcut ^= potion of haste:g
+consumable_shortcut ^= potion of invisibility:h
+consumable_shortcut ^= potion of heal wounds:i
+consumable_shortcut ^= potion of curing:j
+consumable_shortcut ^= potion of berserk rage:k
+consumable_shortcut ^= potion of might:l
+consumable_shortcut ^= potion of attraction:m
+consumable_shortcut ^= potion of brilliance:n
+consumable_shortcut ^= potion of magic:o
+consumable_shortcut ^= potion of cancellation:p
+consumable_shortcut ^= potion of resistance:s
+consumable_shortcut ^= potion of enlightenment:t
+consumable_shortcut ^= potion of lignification:u
+consumable_shortcut ^= potion of ambrosia:x
+consumable_shortcut ^= potion of mutation:y
+consumable_shortcut ^= potion of moonshine:z
 
-item_slot ^= wand of digging:v
-item_slot ^= wand of acid:A
-item_slot ^= wand of light:A
-item_slot ^= wand of quicksilver:A
-item_slot ^= wand of charming:B
-item_slot ^= wand of paralysis:B
-item_slot ^= wand of iceblast:C
-item_slot ^= wand of roots:C
-item_slot ^= wand of warping:C
-item_slot ^= wand of mindburst:D
-item_slot ^= wand of polymorph:E
-item_slot ^= wand of flame:F
+consumable_shortcut ^= scroll of identify:H
+consumable_shortcut ^= scroll of acquirement:I
+consumable_shortcut ^= scroll of blinking:J
+consumable_shortcut ^= scroll of butterflies:K
+consumable_shortcut ^= scroll of teleportation:L
+consumable_shortcut ^= scroll of fear:M
+consumable_shortcut ^= scroll of fog:N
+consumable_shortcut ^= scroll of summoning:O
+consumable_shortcut ^= scroll of silence:P
+consumable_shortcut ^= scroll of vulnerability:Q
+consumable_shortcut ^= scroll of torment:R
+consumable_shortcut ^= scroll of poison:S
+consumable_shortcut ^= scroll of immolation:T
+consumable_shortcut ^= scroll of revelation:U
+consumable_shortcut ^= scroll of noise:V
+consumable_shortcut ^= scroll of brand weapon:W
+consumable_shortcut ^= scroll of enchant weapon:X
+consumable_shortcut ^= scroll of enchant armour:Y
+consumable_shortcut ^= scroll of amnesia:Z
 
-item_slot ^= lightning rod:G
-item_slot ^= phial of floods:a
-item_slot ^= gell's gravitambourine:a
-item_slot ^= tin of tremorstones:b
-item_slot ^= condenser vane:b
-item_slot ^= phantom mirror:c
-item_slot ^= box of beasts:d
-item_slot ^= sack of spiders:d
+gear_slot =
+gear_slot ^= wand of digging:v
+gear_slot ^= wand of acid:A
+gear_slot ^= wand of light:A
+gear_slot ^= wand of quicksilver:A
+gear_slot ^= wand of charming:B
+gear_slot ^= wand of paralysis:B
+gear_slot ^= wand of iceblast:C
+gear_slot ^= wand of roots:C
+gear_slot ^= wand of warping:C
+gear_slot ^= wand of mindburst:D
+gear_slot ^= wand of polymorph:E
+gear_slot ^= wand of flame:F
 
-item_slot ^= (dagger|short sword|rapier|quick blade|staff of|quarterstaff|lajatang|whip|mace|flail|morningstar):-wqer
-item_slot ^= (eveningstar|demon whip|hand axe|war axe|broad axe|spear|trident|demon trident|partisan|long sword|falchion):-wqer
-item_slot ^= (scimitar|demon blade|double sword|sacred scourge|trishula|eudemon blade|sling|shortbow):-wqer
+gear_slot ^= lightning rod:G
+gear_slot ^= phial of floods:a
+gear_slot ^= gell's gravitambourine:a
+gear_slot ^= tin of tremorstones:b
+gear_slot ^= condenser vane:b
+gear_slot ^= phantom mirror:c
+gear_slot ^= box of beasts:d
+gear_slot ^= sack of spiders:d
+
+gear_slot ^= (dagger|short sword|rapier|quick blade|staff of|quarterstaff|lajatang|whip|mace|flail|morningstar):-wqer
+gear_slot ^= (eveningstar|demon whip|hand axe|war axe|broad axe|spear|trident|demon trident|partisan|long sword|falchion):-wqer
+gear_slot ^= (scimitar|demon blade|double sword|sacred scourge|trishula|eudemon blade|sling|shortbow):-wqer
 ###############################################################################################
 ######################################## Spell slots  #########################################
 ###############################################################################################
@@ -598,7 +627,7 @@ spell_slot ^= Sublimation of Blood:T
 
 spell_slot ^= Call Canine Familiar:cC
 spell_slot ^= Confusing Touch:tc
-spell_slot ^= Dazzling Flash:df
+spell_slot ^= Gloom:df
 spell_slot ^= Frozen Ramparts:Rfrt
 spell_slot ^= Fugue of the Fallen:Ffe
 spell_slot ^= Hailstorm:tsT
@@ -719,128 +748,181 @@ ability_slot ^=Draw Stack:r
 ###############################################################################################
 ####################################### Glyphs & colors #######################################
 ###############################################################################################
-feature   += Zot trap                   { x2040, red, red, red}
-feature   += archmage's trap            { x2040, magenta, magenta, magenta}
-feature   += tyrant's trap              { x2040, cyan, cyan, cyan}
-feature   += devourer's trap            { x2040, yellow, yellow, yellow}
-feature   += harlequin's                { x2040, green, green, green}
-feature   += rock wall                  { , , brown }
-feature   += translucent rock wall      { , , yellow }
-feature   += stone wall                 { , , white }
-feature   += translucent stone wall     { , , lightred }
-feature   += metal wall                 { , , lightcyan }
-feature   += crystal wall               { , , green }
-feature   += unnaturally                { , , magenta }
-feature   += translucent unnaturally    { , , cyan }
-feature   += slime covered              { , , lightgreen}
-feature   += spike launcher             { x2350, red, red, red}
-feature   += passage of golubria        { x0472, green, green, green}
+feature   += Zot trap                       { x2040, red, red, red}
+feature   += archmage's trap                { x2040, magenta, magenta, magenta}
+feature   += tyrant's trap                  { x2040, cyan, cyan, cyan}
+feature   += devourer's trap                { x2040, yellow, yellow, yellow}
+feature   += harlequin's                    { x2040, green, green, green}
+feature   += rock wall                      { , , brown }
+feature   += translucent rock wall          { , , yellow }
+feature   += stone wall                     { , , white }
+feature   += translucent stone wall         { , , lightred }
+feature   += metal wall                     { , , lightcyan }
+feature   += crystal wall                   { , , green }
+feature   += unnaturally                    { , , magenta }
+feature   += translucent unnaturally        { , , cyan }
+feature   += slime covered                  { , , lightgreen}
+feature   += spike launcher                 { x2350, red, red, red}
+feature   += passage of golubria            { x0472, green, green, green}
 
-mon_glyph += warg                       : x045B
-mon_glyph += aizul                      : x015C
-mon_glyph += satyr                      : x010B
-mon_glyph += ilsuiw                     : x0271
-mon_glyph += barachi                    : x0424
-mon_glyph += hellion                    : brown
-mon_glyph += neqoxec                    : x2125
-mon_glyph += anaconda                   : red
-mon_glyph += arcanist                   : a
-mon_glyph += jeremiah                   : x0424
-mon_glyph += nagaraja                   : x0147
-mon_glyph += scorpion                   : x015F
-mon_glyph += skyshark                   : x03DC
-mon_glyph += gargoyle                   : x018D
-mon_glyph += acid blob                  : yellow
-mon_glyph += ice devil                  : lightblue
-mon_glyph += wind drake                 : cyan
-mon_glyph += ice fiend                  : lightblue
-mon_glyph += occultist                  : a
-mon_glyph += blink frog                 : lightmagenta
-mon_glyph += hell hound                 : x045B
-mon_glyph += marrowcuda                 : x03DC
-mon_glyph += orb spider                 : x015B
-mon_glyph += saint roka                 : x00F6
-mon_glyph += bound soul                 : x03A9 white
-mon_glyph += royal mummy                : lightblue
-mon_glyph += orc warlord                : x00F6
-mon_glyph += necromancer                : a
-mon_glyph += war gargoyle               : x018D
-mon_glyph += ancient lich               : yellow
-mon_glyph += orc sorcerer               : x00F6
-mon_glyph += shock serpent              : x015A
-mon_glyph += merfolk avatar             : x0271
-mon_glyph += dancing weapon             : x01AA
-mon_glyph += sphinx marauder            : white
-mon_glyph += guardian sphinx            : x0124
-mon_glyph += molten gargoyle            : x018D
-mon_glyph += centaur warrior            : x010B
-mon_glyph += demonic crawler            : x0161
-mon_glyph += orc high priest            : x00F6
-mon_glyph += the royal jelly            : x053A
-mon_glyph += very ugly thing            : x00FC
-mon_glyph += yaktaur captain            : x010B
-mon_glyph += diamond sawblade           : x2055
-mon_glyph += emperor scorpion           : x015F
-mon_glyph += guardian serpent           : x015C
-mon_glyph += deep elf sorcerer          : x00EB
-mon_glyph += salamander tyrant          : x0147
-mon_glyph += quicksilver dragon         : x04A8
-mon_glyph += ironbound convoker         : a
-mon_glyph += vampire bloodprince        : white
-mon_glyph += ironbound preserver        : a
-mon_glyph += deep elf death mage        : x00EB
-mon_glyph += deep elf annihilator       : x00EB
-mon_glyph += deep elf blademaster       : x00EB
-mon_glyph += deep elf high priest       : x00EB
-mon_glyph += elemental wellspring       : x04A8 white
-mon_glyph += ironbound frostheart       : a
-mon_glyph += quicksilver elemental      : x0112
-mon_glyph += deep elf demonologist      : x00EB
-mon_glyph += deep elf elementalist      : x00EB
-mon_glyph += merged slime creature      : x0132
-mon_glyph += deep elf master archer     : x00EB brown
-mon_glyph += alligator snapping turtle  : x0167
+mon_glyph += merged slime creature          : x0132
+mon_glyph += star jelly                     : x0133 cyan
+mon_glyph += slymdra                        : x0189 yellow
+mon_glyph += colossal amoeba                : x0132 white
+mon_glyph += creeping plasmodium            : x020B brown
+mon_glyph += nascent plasmodium             : x020B white
+mon_glyph += morphogenic ooze               : lightmagenta
+mon_glyph += orb of fire                    : red
+mon_glyph += orb of winter                  : white
+mon_glyph += orb of entropy                 : yellow
+mon_glyph += bes kemwar                     : B magenta
+mon_glyph += chonchon                       : b brown
+mon_glyph += crawling flesh cage            : X white
+mon_glyph += drude                          : brown
+mon_glyph += kobold fleshcrafter            : lightred
+mon_glyph += kobold geomancer               : white
+mon_glyph += zykzyl                         : x01BB magenta
 
-item_glyph += darts?                    : x2301
-item_glyph += poisoned                  : green
-item_glyph += curare                    : cyan
-item_glyph += atropa                    : yellow
-item_glyph += datura                    : lightred
-item_glyph += disjunction               : magenta
+mon_glyph += warg                           : x045B
+mon_glyph += aizul                          : x015C
+mon_glyph += satyr                          : x010B
+mon_glyph += ilsuiw                         : x0271
+mon_glyph += barachi                        : x0424
+mon_glyph += hellion                        : brown
+mon_glyph += neqoxec                        : x2125
+mon_glyph += anaconda                       : red
+mon_glyph += arcanist                       : a
+mon_glyph += jeremiah                       : x0424
+mon_glyph += nagaraja                       : x0147
+mon_glyph += scorpion                       : x015F
+mon_glyph += skyshark                       : x03DC
+mon_glyph += gargoyle                       : x018D
+mon_glyph += acid blob                      : yellow
+mon_glyph += ice devil                      : lightblue
+mon_glyph += wind drake                     : cyan
+mon_glyph += ice fiend                      : lightblue
+mon_glyph += occultist                      : a
+mon_glyph += blink frog                     : lightmagenta
+mon_glyph += hell hound                     : x045B
+mon_glyph += marrowcuda                     : x03DC
+mon_glyph += orb spider                     : x015B
+mon_glyph += saint roka                     : x00F6
+mon_glyph += bound soul                     : x03A9 white
+mon_glyph += royal mummy                    : lightblue
+mon_glyph += orc warlord                    : x00F6
+mon_glyph += necromancer                    : a
+mon_glyph += dissolution                    : x053A
+mon_glyph += war gargoyle                   : x018D
+mon_glyph += ancient lich                   : yellow
+mon_glyph += orc sorcerer                   : x00F6
+mon_glyph += shooting star                  : * red
+mon_glyph += shock serpent                  : x015A
+mon_glyph += merfolk avatar                 : x0271
+mon_glyph += dancing weapon                 : x01AA
+mon_glyph += sphinx marauder                : white
+mon_glyph += guardian sphinx                : x0124
+mon_glyph += molten gargoyle                : x018D
+mon_glyph += eye of draining                : red
+mon_glyph += centaur warrior                : x010B
+mon_glyph += demonic crawler                : x0161
+mon_glyph += orc high priest                : x00F6
+mon_glyph += royal jelly                    : x053A
+mon_glyph += very ugly thing                : x00FC
+mon_glyph += yaktaur captain                : x010B
+mon_glyph += diamond sawblade               : x2055
+mon_glyph += emperor scorpion               : x015F
+mon_glyph += guardian serpent               : x015C
+mon_glyph += deep elf sorcerer              : x00EB
+mon_glyph += salamander tyrant              : x0147
+mon_glyph += quicksilver dragon             : x04A8
+mon_glyph += ironbound convoker             : a
+mon_glyph += vampire bloodprince            : white
+mon_glyph += ironbound preserver            : a
+mon_glyph += deep elf death mage            : x00EB
+mon_glyph += deep elf annihilator           : x00EB
+mon_glyph += deep elf blademaster           : x00EB
+mon_glyph += deep elf high priest           : x00EB
+mon_glyph += elemental wellspring           : x04A8 white
+mon_glyph += ironbound frostheart           : a
+mon_glyph += quicksilver elemental          : x0112
+mon_glyph += deep elf demonologist          : x00EB
+mon_glyph += deep elf elementalist          : x00EB
+mon_glyph += deep elf master archer         : x00EB brown
+mon_glyph += alligator snapping turtle      : x0167
 
-item_glyph += stones?                   : x037D
-item_glyph += boomerangs?               : x037D
-item_glyph += large rocks?              : x037D
-item_glyph += throwing nets?            : x037D
+item_glyph += darts?                        : x2301
+item_glyph += poisoned                      : green
+item_glyph += curare                        : cyan
+item_glyph += atropa                        : yellow
+item_glyph += datura                        : lightred
+item_glyph += disjunction                   : magenta
 
-item_glyph += javelins?                 : x2197
-item_glyph += (.*[^r] javelins?)        : brown
-item_glyph += silver javelins?          : white
+item_glyph += stones?                       : x037D
+item_glyph += boomerangs?                   : x037D
+item_glyph += large rocks?                  : x037D
+item_glyph += throwing nets?                : x037D
 
-item_glyph += wand of digging           : brown
-item_glyph += wand of acid              : yellow
-item_glyph += wand of light             : yellow
-item_glyph += wand of quicksilver       : yellow
-item_glyph += wand of charming          : green
-item_glyph += wand of paralysis         : green
-item_glyph += wand of iceblast          : magenta
-item_glyph += wand of roots             : magenta
-item_glyph += wand of warping           : magenta
-item_glyph += wand of mindburst         : cyan
-item_glyph += wand of polymorph         : white
-item_glyph += wand of flame             : lightred
-item_glyph += unidentified.*(wand)      : blue
+item_glyph += javelins?                     : x2197
+item_glyph += (.*[^r] javelins?)            : brown
+item_glyph += silver javelins?              : white
 
-item_glyph += helmet                    : x00A2
-item_glyph += shield                    : x0298
-item_glyph += gloves                    : x00A5
-item_glyph += boots                     : x00A3
+item_glyph += wand of digging               : brown
+item_glyph += wand of acid                  : yellow
+item_glyph += wand of light                 : yellow
+item_glyph += wand of quicksilver           : yellow
+item_glyph += wand of charming              : green
+item_glyph += wand of paralysis             : green
+item_glyph += wand of iceblast              : magenta
+item_glyph += wand of roots                 : magenta
+item_glyph += wand of warping               : magenta
+item_glyph += wand of mindburst             : cyan
+item_glyph += wand of polymorph             : white
+item_glyph += wand of flame                 : lightred
+item_glyph += unidentified.*(wand)          : blue
 
-item_glyph += corpse                    : †
-item_glyph += tin of tremorstones       : }
-item_glyph += moonstone                 : =
-item_glyph += soapstone                 : "
-item_glyph += useless_item.*(large rocks?) : x037D darkgray
+item_glyph += amulet of regeneration        : green
+item_glyph += amulet of magic regeneration  : magenta
+item_glyph += amulet of acrobat             : lightblue
+item_glyph += amulet of reflection          : lightblue
+item_glyph += amulet of guardian spirit     : cyan
+item_glyph += amulet of faith               : cyan
+item_glyph += amulet of chemistry           : yellow
+item_glyph += amulet of dissipation         : yellow
+item_glyph += amulet of wildshape           : brown
+
+
+item_glyph += ring of strength              : lightred
+item_glyph += ring of dexterity             : green
+item_glyph += ring of intelligence          : cyan
+item_glyph += ring of protection            : brown
+item_glyph += ring of evasion               : lightblue
+item_glyph += ring of slaying               : lightred
+item_glyph += ring of magical power         : magenta
+item_glyph += ring of wizardry              : magenta
+item_glyph += ring of see invisible         : lightmagenta
+item_glyph += ring of protection from fire  : lightred
+item_glyph += ring of protection from cold  : cyan
+item_glyph += ring of positive energy       : yellow
+item_glyph += ring of poison resistance     : green
+item_glyph += ring of resist corrosion      : yellow
+item_glyph += ring of willpower             : brown
+item_glyph += ring of flight                : lightgrey
+
+item_glyph += unidentified.*jewellery       : blue
+item_glyph += artefact.*jewellery           : white
+item_glyph += unrand.*jewellery             : lightgreen
+
+
+item_glyph += helmet                        : x00A2
+item_glyph += shield                        : x0298
+item_glyph += gloves                        : x00A5
+item_glyph += boots                         : x00A3
+
+item_glyph += corpse                        : †
+item_glyph += tin of tremorstones           : }
+item_glyph += moonstone                     : =
+item_glyph += soapstone                     : "
+item_glyph += useless_item.*(large rocks?)  : x037D darkgray
 
 # calling this from fOnInit doesn't work for item_glyphs for whatever reason, have to call here
 :fSetCustomGlyphs()
@@ -880,319 +962,6 @@ item_glyph += useless_item.*(large rocks?) : x037D darkgray
      crawl.setopt("autopickup_exceptions += >datura")
      crawl.setopt("autopickup_exceptions += >amnesia")
      crawl.setopt("autopickup_exceptions += >brilliance")
-    end
-  end
-}
-###############################################################################################
-################################### Extended monster info #####################################
-###############################################################################################
-{
-  gSpeciesXPApts = {
-    ["Armataur"] = -1,
-    ["Barachi"] = 0,
-    ["Coglin"] = 0,
-    ["Deep Elf"] = -1,
-    ["Demigod"] = -2,
-    ["Demonspawn"] = -1,
-    ["Djinni"] = 1,
-    ["Draconian"] = -1,
-    ["Felid"] = -1,
-    ["Formicid"] = 1,
-    ["Gargoyle"] = 0,
-    ["Gnoll"] = 0,
-    ["Human"] = 0,
-    ["Kobold"] = 1,
-    ["Merfolk"] = 0,
-    ["Minotaur"] = -1,
-    ["Mountain Dwarf"] = -1,
-    ["Mummy"] = -1,
-    ["Naga"] = 0,
-    ["Octopode"] = 0,
-    ["Oni"] = 0,
-    ["Poltergeist"] = -1,
-    ["Revenant"] = 0,
-    ["Spriggan"] = -1,
-    ["Tengu"] = 0,
-    ["Troll"] = -1,
-    ["Vine Stalker"] = 0,
-  } --
-
-  gSpeciesXPFactors = {
-    ["Armataur"] = 1.414,
-    ["Barachi"] = 1.1892,
-    ["Coglin"] = 1.1892,
-    ["Deep Elf"] = 1.414,
-    ["Demigod"] = 1.6817,
-    ["Demonspawn"] = 1.414,
-    ["Djinni"] = 1,
-    ["Draconian"] = 1.414,
-    ["Felid"] = 1.414,
-    ["Formicid"] = 1,
-    ["Gargoyle"] = 1.1892,
-    ["Gnoll"] = 1.1892,
-    ["Human"] = 1.1892,
-    ["Kobold"] = 1,
-    ["Merfolk"] = 1.1892,
-    ["Minotaur"] = 1.414,
-    ["Mountain Dwarf"] = 1.414,
-    ["Mummy"] = 1.414,
-    ["Naga"] = 1.1892,
-    ["Octopode"] = 1.1892,
-    ["Oni"] = 1.1892,
-    ["Poltergeist"] = 1.414,
-    ["Revenant"] = 1.1892,
-    ["Spriggan"] = 1.414,
-    ["Tengu"] = 1.1892,
-    ["Troll"] = 1.414,
-    ["Vine Stalker"] = 1.1892,
-  } --
-
-  function gPower(base, exp)
-    if exp <= 0 then
-      return 1
-    elseif exp == 1 then
-      return base
-    else
-      return base * gPower(base, exp-1)
-    end
-  end
-
-  function fXPForXL(xl)
-    local lRawXP
-    if xl == 1 then
-      lRawXP = 1
-    elseif xl == 2 then
-      lRawXP = 10
-    elseif xl == 3 then
-      lRawXP = 30
-    elseif xl == 4 then
-      lRawXP = 70
-    elseif xl < 13 then
-      lRawXP = (xl - 4) * 10 + 60 * gPower(2, xl - 4) + 10
-    elseif xl >= 27 then
-      lRawXP = 1059325
-    else
-      lRawXP = 4235 * (xl - 12) * (xl - 12) + 5985 * (xl - 12) + 16675
-    end
-
-    return (lRawXP - 1) * (gSpeciesXPFactors[you.species()])
-  end
-
-  function fXpForNextLevel(plus)
-    if plus == 0 then
-      return (100 - you.xl_progress()) * (fXPForXL(you.xl() + 1) -  fXPForXL(you.xl())) / 100
-    else
-      return fXPForXL(you.xl() + plus + 1) - fXPForXL(you.xl() + 1) + fXpForNextLevel(0)
-    end
-  end
-
-  local inf = 'inf'
-  gMonsInfoDict = {
-    ["jessica"] =             {HD = 1,    XP = 37,      MR = 10,},
-
-    ["adder"] =               {HD = 2,    XP = 13,      MR = 10,},
-    ["gnoll"] =               {HD = 2,    XP = 14,      MR = 10,},
-    ["robin"] =               {HD = 2,    XP = 15,      MR = 10,},
-    ["terence"] =             {HD = 2,    XP = 36,      MR = 10,},
-    ["bombardier beetle"] =   {HD = 2,    XP = 47,      MR = 20,},
-
-    ["natasha"] =             {HD = 3,    XP = 35,      MR = 20,},
-    ["orc wizard"] =          {HD = 3,    XP = 35,      MR = 20,},
-    ["iguana"] =              {HD = 3,    XP = 36,      MR = 10,},
-    ["ijyb"] =                {HD = 3,    XP = 36,      MR = 10,},
-    ["crazy yiuf"] =          {HD = 3,    XP = 40,      MR = 10,},
-    ["orc priest"] =          {HD = 3,    XP = 41,      MR = 20,},
-    ["hound"] =               {HD = 3,    XP = 42,      MR = 10,},
-    ["jelly"] =               {HD = 3,    XP = 42,      MR = 10,},
-    ["killer bee"] =          {HD = 3,    XP = 62,      MR = 10,},
-    ["dowan"] =               {HD = 3,    XP = 69,      MR = 20,},
-    ["wight"] =               {HD = 3,    XP = 73,      MR = 20,},
-    ["menkaure"] =            {HD = 3,    XP = 171,     MR = 20,},
-    ["sigmund"] =             {HD = 3,    XP = 229,     MR = 10,},
-
-    ["ribbon worm"] =         {HD = 4,    XP = 4,       MR = 10,},
-    ["scorpion"] =            {HD = 4,    XP = 84,      MR = 20,},
-    ["centaur"] =             {HD = 4,    XP = 113,     MR = 20,},
-    ["orc warrior"] =         {HD = 4,    XP = 134,     MR = 20,},
-    ["duvessa"] =             {HD = 4,    XP = 146,     MR = 40,},
-    ["edmund"] =              {HD = 4,    XP = 165,     MR = 20,},
-    ["steam dragon"] =        {HD = 4,    XP = 185,     MR = 20,},
-    ["grum"] =                {HD = 4,    XP = 191,     MR = 10,},
-    ["eustachio"] =           {HD = 4,    XP = 200,     MR = 20,},
-
-    ["ogre"] =                {HD = 5,    XP = 120,     MR = 20,},
-    ["ice beast"] =           {HD = 5,    XP = 131,     MR = 20,},
-    ["sky beast"] =           {HD = 5,    XP = 131,     MR = 20,},
-    ["pargi"] =               {HD = 5,    XP = 135,     MR = 10,},
-    ["water moccasin"] =      {HD = 5,    XP = 150,     MR = 20,},
-    ["acid dragon"] =         {HD = 5,    XP = 156,     MR = 20,},
-    ["vampire mosquito"] =    {HD = 5,    XP = 180,     MR = 20,},
-    ["wyvern"] =              {HD = 5,    XP = 209,     MR = 20,},
-    ["blorkula"] =            {HD = 5,    XP = 226,     MR = 20,},
-    ["psyche"] =              {HD = 5,    XP = 343,     MR = 60,},
-    ["maggie"] =              {HD = 5,    XP = 399,     MR = 20,},
-    ["maurice"] =             {HD = 5,    XP = 526,     MR = 40,},
-
-    ["black bear"] =          {HD = 6,    XP = 129,     MR = 20,},
-    ["blink frog"] =          {HD = 6,    XP = 267,     MR = 40,},
-    ["prince ribbit"] =       {HD = 6,    XP = 276,     MR = 40,},
-    ["grinder"] =             {HD = 6,    XP = 279,     MR = 20,},
-    ["hornet"] =              {HD = 6,    XP = 284,     MR = 30,},
-    ["joseph"] =              {HD = 6,    XP = 461,     MR = 40,},
-    ["pikel"] =               {HD = 6,    XP = 647,     MR = 20,},
-    ["lodul"] =               {HD = 6,    XP = 754,     MR = 40,},
-    ["sonja"] =               {HD = 6,    XP = 780,     MR = 10,},
-    ["erolcha"] =             {HD = 6,    XP = 867,     MR = 60,},
-
-    ["phantom"] =             {HD = 7,    XP = 105,     MR = 40,},
-    ["yak"] =                 {HD = 7,    XP = 206,     MR = 20,},
-
-    ["komodo dragon"] =       {HD = 8,    XP = 364,     MR = 40,},
-    ["jeremiah"] =            {HD = 8,    XP = 386,     MR = 40,},
-    ["ice statue"] =          {HD = 8,    XP = 452,     MR = inf,},
-    ["snorg"] =               {HD = 8,    XP = 946,     MR = 60,},
-
-    ["elephant"] =            {HD = 9,    XP = 486,     MR = 60,},
-    ["urug"] =                {HD = 9,    XP = 795,     MR = 40,},
-    ["erica"] =               {HD = 9,    XP = 839,     MR = 40,},
-    ["harold"] =              {HD = 9,    XP = 875,     MR = 60,},
-    ["nessos"] =              {HD = 9,    XP = 1043,    MR = 20,},
-
-    ["nergalle"] =            {HD = 10,   XP = 779,    MR = 60,},
-    ["two-headed ogre"] =     {HD = 10,   XP = 826,    MR = 40,},
-    ["ogre mage"] =           {HD = 10,   XP = 851,    MR = 80,},
-    ["fannar"] =              {HD = 10,   XP = 882,    MR = 80,},
-    ["josephine"] =           {HD = 10,   XP = 912,    MR = 60,},
-
-    ["azrael"] =              {HD = 11,   XP = 992,    MR = 40,},
-    ["agnes"] =               {HD = 11,   XP = 1454,   MR = 100,},
-
-    ["boulder beetle"] =      {HD = 12,   XP = 831,    MR = 40,},
-    ["ice dragon"] =          {HD = 12,   XP = 870,    MR = 40,},
-    ["fire dragon"] =         {HD = 12,   XP = 914,    MR = 60,},
-    ["ettin"] =               {HD = 12,   XP = 933,    MR = 40,},
-
-    ["hydra"] =               {HD = 13,   XP = 864,    MR = 60,},
-    ["ghost moth"] =          {HD = 13,   XP = 1204,   MR = 100,},
-    ["louise"] =              {HD = 13,   XP = 1207,   MR = 80,},
-
-    ["death yak"] =           {HD = 14,   XP = 813,    MR = 100,},
-    ["catoblepas"] =          {HD = 14,   XP = 846,    MR = 100,},
-    ["roxanne"] =             {HD = 14,   XP = 1368,   MR = inf,},
-    ["donald"] =              {HD = 14,   XP = 1374,   MR = 100,},
-    ["aizul"] =               {HD = 14,   XP = 1386,   MR = 120,},
-    ["storm dragon"] =        {HD = 14,   XP = 1402,   MR = 100,},
-    ["frances"] =             {HD = 14,   XP = 1518,   MR = 100,},
-    ["murray"] =              {HD = 14,   XP = 1586,   MR = inf,},
-
-    ["guardian serpent"] =    {HD = 15,   XP = 460,    MR = 60,},
-    ["orc warlord"] =         {HD = 15,   XP = 1153,   MR = 60,},
-    ["nagaraja"] =            {HD = 15,   XP = 1333,   MR = 140,},
-    ["asterion"] =            {HD = 15,   XP = 1709,   MR = 100,},
-    ["mlioglotl"] =           {HD = 15,   XP = 1805,   MR = 120,},
-    ["zenata"] =              {HD = 15,   XP = 1864,   MR = 100,},
-    ["jorgrun"] =             {HD = 15,   XP = 1873,   MR = 120,},
-    ["wiglaf"] =              {HD = 15,   XP = 1913,   MR = 100,},
-    ["enchantress"] =         {HD = 15,   XP = 2328,   MR = 160,},
-    ["geryon"] =              {HD = 15,   XP = 2622,   MR = 120,},
-
-    ["stone giant"] =         {HD = 16,   XP = 1090,   MR = 80,},
-    ["frost giant"] =         {HD = 16,   XP = 1258,   MR = 80,},
-    ["fire giant"] =          {HD = 16,   XP = 1290,   MR = 80,},
-    ["ilsuiw"] =              {HD = 16,   XP = 1338,   MR = 140,},
-    ["kirke"] =               {HD = 16,   XP = 1439,   MR = 100,},
-    ["polyphemus"] =          {HD = 16,   XP = 1540,   MR = 60,},
-    ["quicksilver dragon"] =  {HD = 16,   XP = 1656,   MR = 140,},
-    ["grunn"] =               {HD = 16,   XP = 1718,   MR = 100,},
-    ["rupert"] =              {HD = 16,   XP = 1862,   MR = 100,},
-    ["vashnia"] =             {HD = 16,   XP = 3195,   MR = 120,},
-    ["dispater"] =            {HD = 16,   XP = 5159,   MR = inf,},
-    ["gloorx vloq"] =         {HD = 16,   XP = 6736,   MR = inf,},
-    ["dissolution"] =         {HD = 16,   XP = 7370,   MR = 120,},
-
-    ["tengu reaver"] =        {HD = 17,   XP = 1417,   MR = 60,},
-    ["shadow dragon"] =       {HD = 17,   XP = 1418,   MR = 120,},
-    ["xak'krixis"] =          {HD = 17,   XP = 1492,   MR = 80,},
-    ["serpent of hell"] =     {HD = 17,   XP = 6925,   MR = 180,},
-    ["mnoleg"] =              {HD = 17,   XP = 6890,   MR = inf,},
-    ["asmodeus"] =            {HD = 17,   XP = 8128,   MR = inf,},
-
-    ["jory"] =                {HD = 18,   XP = 2381,   MR = 160,},
-    ["nikola"] =              {HD = 18,   XP = 2438,   MR = 120,},
-    ["golden dragon"] =       {HD = 18,   XP = 2484,   MR = 180,},
-    ["saint roka"] =          {HD = 18,   XP = 2900,   MR = 80,},
-    ["mara"] =                {HD = 18,   XP = 4430,   MR = 140,},
-    ["khufu"] =               {HD = 18,   XP = 4893,   MR = 160,},
-    ["ignacio"] =             {HD = 18,   XP = 6807,   MR = 160,},
-    ["ereshkigal"] =          {HD = 18,   XP = 6976,   MR = inf,},
-
-    ["mennas"] =              {HD = 19,   XP = 4370,   MR = 160,},
-    ["lom lobon"] =           {HD = 19,   XP = 6087,   MR = inf,},
-
-    ["gastronok"] =           {HD = 20,   XP = 1506,   MR = 80,},
-    ["lich"] =                {HD = 20,   XP = 1745,   MR = inf,},
-    ["norris"] =              {HD = 20,   XP = 2329,   MR = 140,},
-    ["bai suzhen"] =          {HD = 20,   XP = 3138,   MR = 100,},
-    ["sojobo"] =              {HD = 20,   XP = 3463,   MR = 140,},
-    ["xtahua"] =              {HD = 20,   XP = 3664,   MR = 180,},
-
-    ["josephina"] =           {HD = 21,   XP = 3438,   MR = inf,},
-    ["royal jelly"] =         {HD = 21,   XP = 7603,   MR = 180,},
-    ["cerebov"] =             {HD = 21,   XP = 11754,  MR = inf,},
-
-    ["margery"] =             {HD = 22,   XP = 2809,   MR = 140,},
-    ["boris"] =               {HD = 22,   XP = 3205,   MR = inf,},
-    ["antaeus"] =             {HD = 22,   XP = 8877,   MR = inf,},
-    ["tiamat"] =              {HD = 22,   XP = 5133,   MR = 140,},
-
-    ["vv"] =                  {HD = 23,   XP = 3226,   MR = 140,},
-    ["arachne"] =             {HD = 23,   XP = 3955,   MR = 80,},
-    ["frederick"] =           {HD = 23,   XP = 5151,   MR = 140,},
-
-    ["parghit"] =             {HD = 27,   XP = 3146,   MR = 140,},
-    ["ancient lich"] =        {HD = 27,   XP = 4758,   MR = inf,},
-    ["dread lich"] =          {HD = 27,   XP = 5171,   MR = inf,},
-
-    ["lernaean hydra"] =      {HD = 30,   XP = 3031,   MR = 120,},
-  } --
-
-  function fFindBySubstrInDict(str, dict)
-    for k, v in pairs(dict) do
-      if string.find(string.lower(str), string.lower(k)) then
-        return v
-      end
-    end
-    return nil
-  end
-
-  function fPrintMonsInfo(monsName)
-    local lMonsInfo = fFindBySubstrInDict(monsName, gMonsInfoDict)
-    if lMonsInfo then
-      crawl.formatted_mpr(string.format("\r%-26s %-10s %-10s %-10s\n", monsName, lMonsInfo["HD"], lMonsInfo["MR"], lMonsInfo["XP"]))
-      return
-    end
-  end
-
-  function fPrintAllMonsInfo()
-    local i, j, lMons, lMonsSet
-    local lMonsList = {}
-    local n = you.los()
-    for i = -n,n do
-      for j = -n,n do
-        lMons = monster.get_monster_at(i, j)
-        if lMons then
-          table.insert(lMonsList, lMons)
-        end
-      end
-    end
-
-    local lHeader = string.format("%-26s %-10s %-10s %-10s", "Name", "HD", "MR", "XP")
-    if #lMonsList > 0 then
-        crawl.formatted_mpr("\r\n\r" .. lHeader .. "\n\r------------------------------------------------------\n")
-    end
-    util.map(fPrintMonsInfo, util.keys(util.set(util.map(function(m) return m:name() end, lMonsList))))
-    if you.xl() < 27 then
-      crawl.formatted_mpr("\r\n\rXP for next XLs: " .. fXpForNextLevel(0) .. " | " .. fXpForNextLevel(1) .. " | " .. fXpForNextLevel(2))
     end
   end
 }
