@@ -1,5 +1,5 @@
 : gVersion = "0.34"
-: gRcRevision = "21"
+: gRcRevision = "22"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -527,7 +527,7 @@ macros+= M 0 ===fToggleSafeMove
 ###############################################################################################
 ######################################## Item sorting #########################################
 ###############################################################################################
-sort_menus = true:slot
+sort_menus = true:equipped,identified,slot
 show_paged_inventory = true
 
 consumable_shortcut =
@@ -591,15 +591,52 @@ consumable_shortcut ^= phantom mirror:c
 consumable_shortcut ^= box of beasts:d
 consumable_shortcut ^= sack of spiders:d
 
-gear_slot ^= (ranged weapon.*):-q
-gear_slot ^= (melee weapon):-wertRT
-gear_slot ^= (magical staff):-asdfDF
-gear_slot ^= (jewellery.*ring):-qwertyQWERTY
-gear_slot ^= (jewellery.*amulet):-vbVB
-gear_slot ^= (jewellery.*amulet):-vbVB
-gear_slot ^= (large rocks?):-z
-gear_slot ^= (talisman):-zxcZXC
-gear_slot ^= (body armour):-asdfASDF
+gear_slot ^= .*:-IOPLEKMNBUYTRGFtmnb
+
+gear_slot ^= (.*[^f] stones?):h
+gear_slot ^= poisoned darts?:i
+gear_slot ^= boomerangs?:j
+gear_slot ^= (.*[^r] javelins?):k
+gear_slot ^= silver javelins?:l
+gear_slot ^= large rocks?:o
+gear_slot ^= curare:p
+gear_slot ^= atropa:u
+gear_slot ^= datura:y
+gear_slot ^= disjunction:H
+gear_slot ^= throwing nets?:J
+
+gear_slot ^= (ranged):q-wertRT
+gear_slot ^= (melee):-wertq+RT
+
+gear_slot ^= (armour):QWYU
+gear_slot ^= (helmet|hat|cloak|scarf|gloves|boots|barding|mask|hood|crown|gauntlets|maulers|slippers|lightning scales):asdfgSG
+gear_slot ^= (shield|orb|warlock's mirror|crystal ball|skull of z|sphere of battle):ADF
+
+gear_slot ^= (jewellery.*ring):zxcvbnm
+gear_slot ^= (jewellery.*amulet):ZXV
+gear_slot ^= (talisman.*):CBNM
+
+autoinscribe += phial of floods:@v1
+autoinscribe += gell's gravitambourine:@v1
+autoinscribe += wand of light:@v2
+autoinscribe += wand of quicksilver:@v2
+autoinscribe += wand of acid:@v2
+autoinscribe += lightning rod:@v3
+autoinscribe += tin of tremorstones:@v4
+
+autoinscribe += poisoned darts?:@Q1
+autoinscribe += boomerangs?:@Q2
+autoinscribe += (.*[^r] javelins?):@Q3
+autoinscribe += silver javelins?:@Q4
+autoinscribe += large rocks?:@Q5
+
+autoinscribe += curare:@f1
+autoinscribe += throwing nets?:@f2
+autoinscribe += disjunction:@f3
+autoinscribe += atropa:@f4
+autoinscribe += datura:@f5
+
+autoinscribe += (jewellery.*ring):@P
 ###############################################################################################
 ######################################## Spell slots  #########################################
 ###############################################################################################
