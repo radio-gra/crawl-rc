@@ -1,5 +1,5 @@
 : gVersion = "0.34"
-: gRcRevision = "22"
+: gRcRevision = "23"
 : gPreset = "Normal"
 #: gPreset = "Streak"
 #: gPreset = "RealTime"
@@ -412,26 +412,27 @@ confirm_action += Evoke
 ###############################################################################################
 ######################################## Autoinscribe #########################################
 ###############################################################################################
-autoinscribe += atropa:blind & confuse
-autoinscribe += curare:slow @f1
-autoinscribe += datura:frenzy
 autoinscribe += phial of floods:@v1
 autoinscribe += gell's gravitambourine:@v1
-autoinscribe += wand of acid:@v2
 autoinscribe += wand of light:@v2
 autoinscribe += wand of quicksilver:@v2
+autoinscribe += wand of acid:@v2
 autoinscribe += lightning rod:@v3
 autoinscribe += tin of tremorstones:@v4
+
 autoinscribe += poisoned darts?:@Q1
 autoinscribe += boomerangs?:@Q2
 autoinscribe += (.*[^r] javelins?):@Q3
 autoinscribe += silver javelins?:@Q4
-autoinscribe += (.*[^f] stones?):@Q5
+autoinscribe += large rocks?:@Q5
+
+autoinscribe += curare:@f1
 autoinscribe += throwing nets?:@f2
 autoinscribe += disjunction:@f3
-autoinscribe += large rocks?:@f4
-autoinscribe += ring of:@P
-autoinscribe += ring ":@P
+autoinscribe += atropa:@f4
+autoinscribe += datura:@f5
+
+autoinscribe += (jewellery.*ring):@P
 ###############################################################################################
 ################################### Force mores & flashes #####################################
 ###############################################################################################
@@ -610,33 +611,11 @@ gear_slot ^= (melee):-wertq+RT
 
 gear_slot ^= (armour):QWYU
 gear_slot ^= (helmet|hat|cloak|scarf|gloves|boots|barding|mask|hood|crown|gauntlets|maulers|slippers|lightning scales):asdfgSG
-gear_slot ^= (shield|orb|warlock's mirror|crystal ball|skull of z|sphere of battle):ADF
+gear_slot ^= (buckler|shield|orb|warlock's mirror|crystal ball|skull of z|sphere of battle):ADF
 
 gear_slot ^= (jewellery.*ring):zxcvbnm
 gear_slot ^= (jewellery.*amulet):ZXV
 gear_slot ^= (talisman.*):CBNM
-
-autoinscribe += phial of floods:@v1
-autoinscribe += gell's gravitambourine:@v1
-autoinscribe += wand of light:@v2
-autoinscribe += wand of quicksilver:@v2
-autoinscribe += wand of acid:@v2
-autoinscribe += lightning rod:@v3
-autoinscribe += tin of tremorstones:@v4
-
-autoinscribe += poisoned darts?:@Q1
-autoinscribe += boomerangs?:@Q2
-autoinscribe += (.*[^r] javelins?):@Q3
-autoinscribe += silver javelins?:@Q4
-autoinscribe += large rocks?:@Q5
-
-autoinscribe += curare:@f1
-autoinscribe += throwing nets?:@f2
-autoinscribe += disjunction:@f3
-autoinscribe += atropa:@f4
-autoinscribe += datura:@f5
-
-autoinscribe += (jewellery.*ring):@P
 ###############################################################################################
 ######################################## Spell slots  #########################################
 ###############################################################################################
